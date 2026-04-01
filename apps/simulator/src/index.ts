@@ -28,7 +28,8 @@ interface Event {
 }
 
 // ── Config ───────────────────────────────────────────────────
-const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:3000/api";
+const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:8080";
+
 const EVENTS_PER_SECOND = Number(process.env.EVENTS_PER_SECOND ?? 50);
 const BATCH_SIZE = Number(process.env.BATCH_SIZE ?? 20);
 const REALISTIC_MODE = process.env.REALISTIC_MODE === "true";
@@ -132,7 +133,7 @@ function buildEvent(store: Store, products: Product[]): Event {
 async function sendBatch(events: Event[]): Promise<void> {
   try {
     await axios.post(
-      `${API_BASE_URL}`,
+      `${API_BASE_URL}/api/v1/events/ingest`,
       { events },
       {
         headers: { "Content-Type": "application/json" },
