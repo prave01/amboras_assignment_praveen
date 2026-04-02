@@ -68,6 +68,8 @@ export const events = pgTable(
   }),
 );
 
+export type EventInsert = typeof events.$inferInsert;
+
 export const preAggregatedMetrics = pgTable(
   "pre_aggregated_metrics",
   {
