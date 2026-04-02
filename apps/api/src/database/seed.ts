@@ -1,6 +1,13 @@
 import { DatabaseError } from "pg";
 import { db } from "./db";
-import { users, stores, products, UserInsert } from "./schema";
+import {
+  users,
+  stores,
+  products,
+  UserInsert,
+  StoreInsert,
+  ProductInsert,
+} from "./schema";
 import { SampleUsers, SampleStores, SampleProducts } from "@repo/seed-data";
 
 const seed = async () => {
@@ -22,7 +29,7 @@ const seed = async () => {
 
       const userMap = new Map(createdUsers.map((u) => [u.email, u.id]));
 
-      const buildStores = SampleStores.map((store) => {
+      const buildStores: StoreInsert[] = SampleStores.map((store) => {
         const owner = SampleUsers.find((u) => u.id === store.owner_id);
 
         if (!owner) {
@@ -36,6 +43,7 @@ const seed = async () => {
         }
 
         return {
+          id: store.id,
           name: store.name,
           slug: store.slug,
           currency: store.currency,
@@ -53,7 +61,7 @@ const seed = async () => {
 
       const storeMap = new Map(createdStores.map((s) => [s.slug, s.id]));
 
-      const buildProducts = SampleProducts.map((product) => {
+      const buildProducts: ProductInsert[] = SampleProducts.map((product) => {
         const store = SampleStores.find((s) => s.id === product.store_id);
 
         if (!store) {
@@ -67,6 +75,7 @@ const seed = async () => {
         }
 
         return {
+          id: product.id,
           name: product.name,
           category: product.category,
           price: product.price.toString(),
