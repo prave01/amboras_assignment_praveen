@@ -1,19 +1,19 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { IngestDto } from './dto/ingest.dto';
-import { db } from 'src/database/db';
-import { events } from 'src/database/schema';
+import { Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Controller('events')
 export class EventsController {
+  constructor(@InjectQueue('events') private readonly eventsQueue: Queue) { }
+
   @Post('ingest')
   async updateEventData(@Body() ingestDto: IngestDto) {
-    // const returning = await db
-    //   .insert(events)
-    //   .values(ingestDto.events as any)
-    //   .returning({
-    //     id: events.id,
-    //   });
-    //
-    console.log('Created', ingestDto.events);
+    const job = await this.eventsQueue.add('ingest-batch', {
+      events: ingestDto.events,
+    });
+
+    console.log(`Queued job id: ${job.id}, events: ${ingestDto.events.length}`);
+    return { queued: ingestDto.events.length, jobId: job.id };
   }
 }
