@@ -229,9 +229,9 @@ async function run() {
   // }, 5000);
 }
 
-setTimeout(() => {
-  run().catch((err) => {
-    console.error("[simulator] Fatal error:", err);
-    process.exit(1);
-  });
-}, 5000);
+// setTimeout(() => {
+//   run().catch((err) => {
+//     console.error("[simulator] Fatal error:", err);
+//     process.exit(1);
+//   });
+// }, 5000);
