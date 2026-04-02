@@ -1,7 +1,6 @@
 import axios from "axios";
-import fs from "fs";
-import path from "path";
 import { config } from "dotenv";
+import { SampleStores, SampleProducts } from "@repo/seed-data";
 
 config({
   path: "../../.env.local",
@@ -38,7 +37,6 @@ const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:8080";
 const EVENTS_PER_SECOND = Number(process.env.EVENTS_PER_SECOND ?? 50);
 const BATCH_SIZE = Number(process.env.BATCH_SIZE ?? 20);
 const REALISTIC_MODE = process.env.REALISTIC_MODE === "true";
-const SEED_FILE_PATH = path.join(__dirname, "seed.json");
 
 // ── Event type weights ────────────────────────────────────────
 // Reflects a realistic eCommerce funnel:
@@ -156,8 +154,17 @@ async function sendBatch(events: Event[]): Promise<void> {
 // ── Main loop ────────────────────────────────────────────────
 async function run() {
   // Load seed data
-  const raw = fs.readFileSync(SEED_FILE_PATH, "utf-8");
-  const seed: SeedData = JSON.parse(raw);
+  const seed: SeedData = {
+    stores: SampleStores.map((store) => ({
+      id: store.id,
+      currency: store.currency,
+    })),
+    products: SampleProducts.map((product) => ({
+      id: product.id,
+      store_id: product.store_id,
+      price: product.price,
+    })),
+  };
 
   // Build a per-store product lookup for fast access
   const productsByStore = new Map<string, Product[]>();

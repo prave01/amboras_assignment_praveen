@@ -173,6 +173,9 @@ importers:
         specifier: ^17.3.1
         version: 17.3.1
     devDependencies:
+      '@repo/seed-data':
+        specifier: workspace:*
+        version: link:../../packages/seed-data
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.37
@@ -219,14 +222,7 @@ importers:
         specifier: ^8.50.0
         version: 8.50.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.2)
 
-  packages/seed-data:
-    devDependencies:
-      '@types/node':
-        specifier: ^25.5.0
-        version: 25.5.0
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@types/node@25.5.0)(typescript@5.9.3)
+  packages/seed-data: {}
 
   packages/typescript-config: {}
 
@@ -1779,9 +1775,6 @@ packages:
 
   '@types/node@24.12.0':
     resolution: {integrity: sha512-GYDxsZi3ChgmckRT9HPU0WEhKLP08ev/Yfcq2AstjrDASOYCSXeyjDsHg4v5t4jOj7cyDX3vmprafKlWIG9MXQ==}
-
-  '@types/node@25.5.0':
-    resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
 
   '@types/pg@8.20.0':
     resolution: {integrity: sha512-bEPFOaMAHTEP1EzpvHTbmwR8UsFyHSKsRisLIHVMXnpNefSbGA1bD6CVy+qKjGSqmZqNqBDV2azOBo8TgkcVow==}
@@ -4721,9 +4714,6 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
-  undici-types@7.18.2:
-    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
-
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
@@ -6279,10 +6269,6 @@ snapshots:
   '@types/node@24.12.0':
     dependencies:
       undici-types: 7.16.0
-
-  '@types/node@25.5.0':
-    dependencies:
-      undici-types: 7.18.2
 
   '@types/pg@8.20.0':
     dependencies:
@@ -9564,24 +9550,6 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
-  ts-node@10.9.2(@types/node@25.5.0)(typescript@5.9.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.12
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 25.5.0
-      acorn: 8.15.0
-      acorn-walk: 8.3.5
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.4
-      make-error: 1.3.6
-      typescript: 5.9.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-
   tsconfig-paths-webpack-plugin@4.2.0:
     dependencies:
       chalk: 4.1.2
@@ -9710,8 +9678,6 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici-types@7.16.0: {}
-
-  undici-types@7.18.2: {}
 
   universalify@2.0.1: {}
 
