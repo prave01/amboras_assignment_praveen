@@ -5,6 +5,7 @@ import { AuthModule } from "./auth/auth.module";
 import { EventsModule } from "./events/events.module";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { BullModule } from "@nestjs/bullmq";
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { BullModule } from "@nestjs/bullmq";
         port: 6379,
       },
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

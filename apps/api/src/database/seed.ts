@@ -9,18 +9,25 @@ import {
   ProductInsert,
 } from "./schema";
 import { SampleUsers, SampleStores, SampleProducts } from "@repo/seed-data";
+import bcrypt from "bcrypt";
 
 const seed = async () => {
   try {
     await db.transaction(async (tx) => {
       console.log("Seeding started...");
 
-      const buildUsers: UserInsert[] = SampleUsers.map((u) => ({
-        id: u.id,
-        name: u.name,
-        email: u.email,
-        password: u.password,
-      }));
+      const buildUsers: UserInsert[] = await Promise.all(
+        SampleUsers.map(async (u) => {
+          const hashedPassword = await bcrypt.hash(u.password, 10);
+
+          return {
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            password: hashedPassword,
+          };
+        }),
+      );
 
       const createdUsers = await tx.insert(users).values(buildUsers).returning({
         id: users.id,

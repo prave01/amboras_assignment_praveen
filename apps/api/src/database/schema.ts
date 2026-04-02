@@ -18,6 +18,7 @@ export const users = pgTable("users", {
 });
 
 export type UserInsert = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
 
 export const stores = pgTable("stores", {
   id: uuid("id").primaryKey().defaultRandom(),
