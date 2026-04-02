@@ -1,31 +1,31 @@
 {
   "users": [
     {
-      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "id": "7bc3f974-9124-4c56-b90c-342ca68d18ee",
       "email": "maya@streetkicks.com",
       "name": "Maya Rodriguez",
       "password": "Password123!"
     },
     {
-      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "id": "908e5184-611c-4936-b53c-9fd8fa946623",
       "email": "liam@techgear.io",
       "name": "Liam Chen",
       "password": "Password123!"
     },
     {
-      "id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "id": "96f5c50b-cca9-4b8d-a5f2-3b3d13e0f080",
       "email": "priya@botanica.store",
       "name": "Priya Patel",
       "password": "Password123!"
     },
     {
-      "id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "id": "2bb5eabf-a7ff-4f3a-9417-d6c42f608249",
       "email": "omar@desksupply.co",
       "name": "Omar Hassan",
       "password": "Password123!"
     },
     {
-      "id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "id": "d5368bf7-1f5d-45eb-b7a1-ce9cb3e68a6c",
       "email": "sofie@lumenlights.eu",
       "name": "Sofie Bergmann",
       "password": "Password123!"
@@ -33,36 +33,36 @@
   ],
   "stores": [
     {
-      "id": "s1000000-0001-0001-0001-000000000001",
-      "owner_id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
+      "owner_id": "7bc3f974-9124-4c56-b90c-342ca68d18ee",
       "name": "Street Kicks",
       "slug": "street-kicks",
       "currency": "USD"
     },
     {
-      "id": "s2000000-0002-0002-0002-000000000002",
-      "owner_id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
+      "owner_id": "908e5184-611c-4936-b53c-9fd8fa946623",
       "name": "TechGear",
       "slug": "tech-gear",
       "currency": "USD"
     },
     {
-      "id": "s3000000-0003-0003-0003-000000000003",
-      "owner_id": "a1b2c3d4-0003-0003-0003-000000000003",
+      "id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
+      "owner_id": "96f5c50b-cca9-4b8d-a5f2-3b3d13e0f080",
       "name": "Botanica",
       "slug": "botanica",
       "currency": "USD"
     },
     {
-      "id": "s4000000-0004-0004-0004-000000000004",
-      "owner_id": "a1b2c3d4-0004-0004-0004-000000000004",
+      "id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
+      "owner_id": "2bb5eabf-a7ff-4f3a-9417-d6c42f608249",
       "name": "DeskSupply",
       "slug": "desk-supply",
       "currency": "USD"
     },
     {
-      "id": "s5000000-0005-0005-0005-000000000005",
-      "owner_id": "a1b2c3d4-0005-0005-0005-000000000005",
+      "id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
+      "owner_id": "d5368bf7-1f5d-45eb-b7a1-ce9cb3e68a6c",
       "name": "Lumen Lights",
       "slug": "lumen-lights",
       "currency": "USD"
@@ -70,351 +70,351 @@
   ],
   "products": [
     {
-      "id": "p1000001-0001-0001-0001-000000000001",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "883f338d-efa2-45f8-8529-723e3d2ab0b4",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Air Force 1 Low",
       "price": 110.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000002-0001-0001-0001-000000000002",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "859b7465-e6c0-447b-a2fe-3776727133eb",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Jordan 4 Retro",
       "price": 210.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000003-0001-0001-0001-000000000003",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "346a1ccb-0a97-4802-b030-a78d2293c980",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "New Balance 990v5",
       "price": 185.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000004-0001-0001-0001-000000000004",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "f4c2f55b-71cb-436b-829b-0d446f553efd",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Adidas Samba OG",
       "price": 100.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000005-0001-0001-0001-000000000005",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "ab2012e6-5e9b-46d7-bc1f-bda58452d4ae",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Vans Old Skool",
       "price": 75.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000006-0001-0001-0001-000000000006",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "f3704cc8-9aff-4290-ad70-6b1276c23579",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Converse Chuck 70",
       "price": 90.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000007-0001-0001-0001-000000000007",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "ce913597-0383-48f6-bcca-d16c4bed159f",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Asics Gel-Kayano 30",
       "price": 160.0,
       "category": "running"
     },
     {
-      "id": "p1000008-0001-0001-0001-000000000008",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "741e613b-051b-42bc-8939-3beb5b7feb59",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Yeezy Boost 350 V2",
       "price": 230.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000009-0001-0001-0001-000000000009",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "30d12301-731b-475f-b5ae-99275a327fb9",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Nike Dunk Low",
       "price": 110.0,
       "category": "sneakers"
     },
     {
-      "id": "p1000010-0001-0001-0001-000000000010",
-      "store_id": "s1000000-0001-0001-0001-000000000001",
+      "id": "94f00f0f-d2f2-4338-9a0e-615766ded239",
+      "store_id": "4bf2e33b-974a-4dcd-b077-a0de50bc6a51",
       "name": "Puma Suede Classic",
       "price": 70.0,
       "category": "sneakers"
     },
     {
-      "id": "p2000001-0002-0002-0002-000000000001",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "f9831187-752b-46d6-bc65-8655f2c2be73",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "Wireless Mechanical Keyboard",
       "price": 149.99,
       "category": "input"
     },
     {
-      "id": "p2000002-0002-0002-0002-000000000002",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "b7dbc953-d11b-43b8-82d5-3cf8eaed4b03",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "4K USB-C Monitor 27\"",
       "price": 549.0,
       "category": "display"
     },
     {
-      "id": "p2000003-0002-0002-0002-000000000003",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "c4b49e64-9bc9-4653-a1a2-331d689d2a64",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "Ergonomic Mouse",
       "price": 89.99,
       "category": "input"
     },
     {
-      "id": "p2000004-0002-0002-0002-000000000004",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "a8e0e6cd-8b5b-4bd9-ba6f-86fd2b9f9ac2",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "100W GaN Charger",
       "price": 59.99,
       "category": "accessories"
     },
     {
-      "id": "p2000005-0002-0002-0002-000000000005",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "b2ea2536-e5f9-4437-a42f-c4f415139e8c",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "USB-C Hub 10-in-1",
       "price": 79.99,
       "category": "accessories"
     },
     {
-      "id": "p2000006-0002-0002-0002-000000000006",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "060e7096-5824-45cb-9ed8-ec56c43e0291",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "Webcam 1080p",
       "price": 119.0,
       "category": "video"
     },
     {
-      "id": "p2000007-0002-0002-0002-000000000007",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "6170443d-7cdd-4743-b012-5d32fcf60e32",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "Noise Cancelling Headset",
       "price": 199.0,
       "category": "audio"
     },
     {
-      "id": "p2000008-0002-0002-0002-000000000008",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "0128bd53-827e-47dd-8844-6234f03fc729",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "Desk Cable Organizer",
       "price": 29.99,
       "category": "accessories"
     },
     {
-      "id": "p2000009-0002-0002-0002-000000000009",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "3e4dcea4-1518-474e-8c5a-5e77fabd57df",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "Portable SSD 1TB",
       "price": 109.99,
       "category": "storage"
     },
     {
-      "id": "p2000010-0002-0002-0002-000000000010",
-      "store_id": "s2000000-0002-0002-0002-000000000002",
+      "id": "cd0d8b80-d8a4-4424-9d0d-74bf3fd9eb7e",
+      "store_id": "8ee1a339-c1a4-4c26-b9aa-f8e10a79b68b",
       "name": "Stream Deck MK.2",
       "price": 149.99,
       "category": "accessories"
     },
     {
-      "id": "p3000001-0003-0003-0003-000000000001",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "f01fa37a-5ed9-47d2-b218-2f583c0ff44c",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Monstera Deliciosa 6\"",
       "price": 32.0,
       "category": "plants"
     },
     {
-      "id": "p3000002-0003-0003-0003-000000000002",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "562551d2-2ab4-4436-9709-f6f52cff76bb",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Fiddle Leaf Fig 10\"",
       "price": 55.0,
       "category": "plants"
     },
     {
-      "id": "p3000003-0003-0003-0003-000000000003",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "ccbbfab9-ff15-4b6b-83a7-1bd22f8602ca",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Ceramic Planter Set 3-pack",
       "price": 42.0,
       "category": "planters"
     },
     {
-      "id": "p3000004-0003-0003-0003-000000000004",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "a3a286d2-8de6-4878-a748-31a1a77805c5",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Potting Mix Premium Bag",
       "price": 18.5,
       "category": "soil"
     },
     {
-      "id": "p3000005-0003-0003-0003-000000000005",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "5deeb369-1194-413b-8e68-3a04d719a326",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Snake Plant 4\"",
       "price": 24.0,
       "category": "plants"
     },
     {
-      "id": "p3000006-0003-0003-0003-000000000006",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "93d76934-ff62-453b-8f78-a731139e2283",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Plant Food Concentrate",
       "price": 14.99,
       "category": "nutrients"
     },
     {
-      "id": "p3000007-0003-0003-0003-000000000007",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "c80aa936-602f-4ffa-82be-2aac2626adda",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Hanging Planter Macrame",
       "price": 28.0,
       "category": "planters"
     },
     {
-      "id": "p3000008-0003-0003-0003-000000000008",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "00d7d6d0-672c-4851-a504-0f666537ba7f",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Succulent Starter Kit",
       "price": 36.0,
       "category": "plants"
     },
     {
-      "id": "p3000009-0003-0003-0003-000000000009",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "2c2e5972-7e34-4cf2-8a6e-b223a4062fa5",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Terracotta Pot Set 5\"",
       "price": 22.0,
       "category": "planters"
     },
     {
-      "id": "p3000010-0003-0003-0003-000000000010",
-      "store_id": "s3000000-0003-0003-0003-000000000003",
+      "id": "606679cb-7e5b-4b71-8a9e-20019094f6a3",
+      "store_id": "e1a1dec6-19d9-40c2-bdc0-43b8f6033085",
       "name": "Grow Light LED Strip",
       "price": 49.99,
       "category": "tools"
     },
     {
-      "id": "p4000001-0004-0004-0004-000000000001",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "7eb32097-d29c-4ce9-9470-09da7503158a",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Standing Desk Mat",
       "price": 64.99,
       "category": "comfort"
     },
     {
-      "id": "p4000002-0004-0004-0004-000000000002",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "de1fb3f8-a30a-47e9-823c-2c5ecf29c54b",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Monitor Arm Dual",
       "price": 89.0,
       "category": "mounts"
     },
     {
-      "id": "p4000003-0004-0004-0004-000000000003",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "1d264ef1-67f5-423e-b86d-d7b86339a91f",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Desk Pad XL 90x40cm",
       "price": 39.99,
       "category": "accessories"
     },
     {
-      "id": "p4000004-0004-0004-0004-000000000004",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "7214c074-886a-4c89-a9a3-ef55b6e965b1",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Bamboo Desk Organizer",
       "price": 34.99,
       "category": "organization"
     },
     {
-      "id": "p4000005-0004-0004-0004-000000000005",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "1e366963-635e-4d17-b56c-6f284fcd0ba9",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Ergonomic Wrist Rest",
       "price": 24.99,
       "category": "comfort"
     },
     {
-      "id": "p4000006-0004-0004-0004-000000000006",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "02528144-8af2-4aeb-99a9-e4074dbd476e",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Whiteboard Film Roll",
       "price": 29.99,
       "category": "productivity"
     },
     {
-      "id": "p4000007-0004-0004-0004-000000000007",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "d1fa0a07-e8c3-4cba-8a40-091c342815ab",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Lap Desk with Storage",
       "price": 54.99,
       "category": "furniture"
     },
     {
-      "id": "p4000008-0004-0004-0004-000000000008",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "7fd9c84a-7f50-4791-b675-29c0db5a2f90",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Cable Management Tray",
       "price": 19.99,
       "category": "organization"
     },
     {
-      "id": "p4000009-0004-0004-0004-000000000009",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "7153a0ba-daf4-480e-9286-240fcdb169a6",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Pen and Pencil Holder",
       "price": 14.99,
       "category": "organization"
     },
     {
-      "id": "p4000010-0004-0004-0004-000000000010",
-      "store_id": "s4000000-0004-0004-0004-000000000004",
+      "id": "4d3c25a6-435b-496c-854e-fb3df79b7c61",
+      "store_id": "1b16fc6d-cb7e-4d7f-b231-a601ab20f2aa",
       "name": "Adjustable Laptop Stand",
       "price": 44.99,
       "category": "mounts"
     },
     {
-      "id": "p5000001-0005-0005-0005-000000000001",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "a7bc277f-6cb3-4a5d-ab38-8b864cda36ff",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Edison Bulb E27 4W",
       "price": 12.99,
       "category": "bulbs"
     },
     {
-      "id": "p5000002-0005-0005-0005-000000000002",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "a3a48d37-bf05-4efe-8657-41b38eff9a51",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Pendant Light Brass",
       "price": 79.0,
       "category": "pendant"
     },
     {
-      "id": "p5000003-0005-0005-0005-000000000003",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "28babc60-f28e-4568-9471-82a5851d2d97",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "LED Strip 5m Smart",
       "price": 44.99,
       "category": "strips"
     },
     {
-      "id": "p5000004-0005-0005-0005-000000000004",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "197f8d1d-315c-49cf-ac78-ff5d4e1f01b4",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Table Lamp Marble Base",
       "price": 119.0,
       "category": "table"
     },
     {
-      "id": "p5000005-0005-0005-0005-000000000005",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "8c747f0d-4158-429c-850e-665cfa91f106",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Floor Lamp Arc Black",
       "price": 159.0,
       "category": "floor"
     },
     {
-      "id": "p5000006-0005-0005-0005-000000000006",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "15d19ef9-aeb8-4e52-8cce-db0e52e0564c",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Dimmable Ceiling Flush",
       "price": 94.0,
       "category": "ceiling"
     },
     {
-      "id": "p5000007-0005-0005-0005-000000000007",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "b1b372c5-f758-4139-b97e-bf5b38cf77f6",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Wall Sconce Set x2",
       "price": 88.0,
       "category": "wall"
     },
     {
-      "id": "p5000008-0005-0005-0005-000000000008",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "139f0ee7-380a-4126-b696-b85efffa98c5",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Smart Bulb E27 RGB",
       "price": 18.99,
       "category": "bulbs"
     },
     {
-      "id": "p5000009-0005-0005-0005-000000000009",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "c1828ce1-8d2d-43ad-9bf1-a24a36a53baa",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Desk Lamp Touch Dimmer",
       "price": 69.0,
       "category": "table"
     },
     {
-      "id": "p5000010-0005-0005-0005-000000000010",
-      "store_id": "s5000000-0005-0005-0005-000000000005",
+      "id": "40c8cc20-d03e-4fb1-9b4f-25a40ffb671c",
+      "store_id": "abdf5af0-03b4-4ef4-abfb-f99fd73ad46b",
       "name": "Clip-on Reading Light",
       "price": 26.99,
       "category": "accessories"
