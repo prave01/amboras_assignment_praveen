@@ -6,7 +6,6 @@ config({
   path: "../../.env.local",
 });
 
-// ── Types ────────────────────────────────────────────────────
 interface Product {
   id: string;
   store_id: string;
@@ -31,16 +30,12 @@ interface Event {
   data: Record<string, unknown>;
 }
 
-// ── Config ───────────────────────────────────────────────────
 const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:8080";
 
 const EVENTS_PER_SECOND = Number(process.env.EVENTS_PER_SECOND ?? 50);
 const BATCH_SIZE = Number(process.env.BATCH_SIZE ?? 20);
-const REALISTIC_MODE = process.env.REALISTIC_MODE === "true";
+const REALISTIC_MODE = process.env.REALISTIC_MODE! || false;
 
-// ── Event type weights ────────────────────────────────────────
-// Reflects a realistic eCommerce funnel:
-// most traffic is page views, very few end in purchases
 const EVENT_TYPES = [
   { type: "page_view", weight: 50 },
   { type: "add_to_cart", weight: 20 },
@@ -49,9 +44,6 @@ const EVENT_TYPES = [
   { type: "purchase", weight: 8 },
 ];
 
-// ── Helpers ──────────────────────────────────────────────────
-
-// Weighted random pick from EVENT_TYPES
 function pickEventType(): string {
   const total = EVENT_TYPES.reduce((sum, e) => sum + e.weight, 0);
   let rand = Math.random() * total;
@@ -62,18 +54,14 @@ function pickEventType(): string {
   return "page_view";
 }
 
-// Random item from an array
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]!;
 }
 
-// Unique event ID
 function generateEventId(): string {
   return `evt_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
-// Realistic traffic multiplier based on hour of day (0-23)
-// Peaks at lunch (12-14) and evening (19-21), quiet at night
 function trafficMultiplier(hour: number): number {
   const curve: Record<number, number> = {
     0: 0.1,
@@ -121,7 +109,6 @@ function buildEvent(store: Store, products: Product[]): Event {
     baseData.product_id = product.id;
     baseData.currency = store.currency;
   }
-  // page_view has no extra data
 
   return {
     event_id: generateEventId(),
@@ -140,18 +127,24 @@ async function sendBatch(events: Event[]): Promise<void> {
       { events },
       {
         headers: { "Content-Type": "application/json" },
-        timeout: 5000,
+        // timeout: 5000, // add timeout if desired
       },
     );
   } catch (err) {
-    // Log and continue — simulator should never crash on a failed batch
     if (axios.isAxiosError(err)) {
-      console.error(`[simulator] Batch failed: ${err.message}`);
+      const status = err.response?.status;
+      const responseData = err.response?.data;
+      const code = err.code;
+      console.error(
+        `[simulator] Batch failed: ${code ?? "unknown"}${status ? ` status=${status}` : ""}`,
+        responseData ?? err.message,
+      );
+    } else {
+      console.error("[simulator] Batch failed:", err);
     }
   }
 }
 
-// ── Main loop ────────────────────────────────────────────────
 async function run() {
   // Load seed data
   const seed: SeedData = {
@@ -190,23 +183,21 @@ async function run() {
 
   const tick = async () => {
     // In realistic mode, scale the effective rate by time-of-day
+
     const multiplier = REALISTIC_MODE
       ? trafficMultiplier(new Date().getHours())
-      : 1.0;
+      : 1.0; // 100% traffic
 
-    // Skip this tick probabilistically when traffic should be low
     if (Math.random() > multiplier) {
       return;
     }
 
-    // Pick a random store and build one event
     const store = pick(seed.stores);
     const products = productsByStore.get(store.id) ?? [];
     if (products.length === 0) return;
 
     batch.push(buildEvent(store, products));
 
-    // Flush when batch is full
     if (batch.length >= BATCH_SIZE) {
       const toSend = batch.splice(0, BATCH_SIZE);
       console.log(`[simulator] Sending batch of ${toSend.length} events`);
@@ -214,12 +205,10 @@ async function run() {
     }
   };
 
-  // Run tick on interval
   setInterval(() => {
     tick().catch((err) => console.error("[simulator] Tick error:", err));
   }, baseIntervalMs);
 
-  // Flush any remaining events every 5 seconds (handles low-traffic periods)
   setInterval(async () => {
     if (batch.length > 0) {
       const toSend = batch.splice(0, batch.length);
@@ -229,9 +218,9 @@ async function run() {
   }, 5000);
 }
 
-// setTimeout(() => {
-//   run().catch((err) => {
-//     console.error("[simulator] Fatal error:", err);
-//     process.exit(1);
-//   });
-// }, 5000);
+setTimeout(() => {
+  run().catch((err) => {
+    console.error("[simulator] Fatal error:", err);
+    process.exit(1);
+  });
+}, 5000);

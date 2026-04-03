@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Type } from 'class-transformer'
 import {
   IsArray,
   IsIn,
@@ -11,54 +11,54 @@ import {
   IsUUID,
   ValidateIf,
   ValidateNested,
-} from "class-validator";
+} from 'class-validator'
 
 const VALID_EVENT_TYPES = [
-  "page_view",
-  "add_to_cart",
-  "remove_from_cart",
-  "checkout_started",
-  "purchase",
-] as const;
+  'page_view',
+  'add_to_cart',
+  'remove_from_cart',
+  'checkout_started',
+  'purchase',
+] as const
 
 export class EventDataDto {
   @IsOptional()
   @IsUUID()
-  product_id?: string;
+  product_id?: string
 
   // amount is required when event_type is purchase
   @ValidateIf((o) => o.amount !== undefined)
   @IsNumber()
   @IsPositive()
-  amount?: number;
+  amount?: number
 
   @IsOptional()
   @IsString()
-  currency?: string;
+  currency?: string
 }
 
 export class EventDto {
   @IsString()
   @IsNotEmpty()
-  event_id: string;
+  event_id: string
 
   @IsUUID()
-  store_id: string;
+  store_id: string
 
   @IsIn(VALID_EVENT_TYPES)
-  event_type: string;
+  event_type: string
 
   @IsISO8601()
-  timestamp: string;
+  timestamp: string
 
   @ValidateNested()
   @Type(() => EventDataDto)
-  data: EventDataDto;
+  data: EventDataDto
 }
 
 export class IngestDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => EventDto)
-  events: EventDto[];
+  events: EventDto[]
 }

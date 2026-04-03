@@ -1,8 +1,8 @@
 export const jwtConstants = {
   get secret() {
-    return "secret";
+    return 'secret'
   },
   get expirationTime() {
-    return process.env.JWT_EXPIRESIN;
+    return process.env.JWT_EXPIRESIN
   },
-};
+}
