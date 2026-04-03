@@ -8,6 +8,7 @@ import {
   uniqueIndex,
   index,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -97,6 +98,9 @@ export const preAggregatedMetrics = pgTable(
     ),
   }),
 );
+
+export const PreAggregatedMetricsSchema =
+  createInsertSchema(preAggregatedMetrics);
 
 export const topProductsCache = pgTable(
   "top_products_cache",
