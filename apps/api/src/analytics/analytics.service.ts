@@ -1,23 +1,23 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { count, eq, gte, sql, sum } from 'drizzle-orm';
-import { db } from 'src/database/db';
-import { events, preAggregatedMetrics, stores } from 'src/database/schema';
-import { redis } from 'src/redis/redis.client';
+import { Injectable, Logger } from '@nestjs/common'
+import { Cron, CronExpression } from '@nestjs/schedule'
+import { count, eq, gte, sql, sum } from 'drizzle-orm'
+import { db } from 'src/database/db'
+import { events, preAggregatedMetrics, stores } from 'src/database/schema'
+import { redis } from 'src/redis/redis.client'
 
 @Injectable()
 export class AnalyticsService {
-  private readonly logger = new Logger(AnalyticsService.name);
+  private readonly logger = new Logger(AnalyticsService.name)
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   async handlePreaggregationJob() {
-    this.logger.debug('Running pre-aggregation job...');
+    this.logger.debug('Running pre-aggregation job...')
 
-    const todayStart = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const todayStart = new Date(Date.now() - 24 * 60 * 60 * 1000)
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
 
-    const allStores = await db.select().from(stores);
+    const allStores = await db.select().from(stores)
 
     // Each query groups by storeId and aggregates in the DB
     // Only 5 rows come back per query (one per store)
@@ -57,15 +57,15 @@ export class AnalyticsService {
         .from(events)
         .where(gte(events.timestamp, monthAgo))
         .groupBy(events.storeId),
-    ]);
+    ])
 
     for (const store of allStores) {
-      const todayRow = todayStats.find((s) => s.storeId === store.id);
-      const weekRow = weekStats.find((s) => s.storeId === store.id);
-      const monthRow = monthStats.find((s) => s.storeId === store.id);
+      const todayRow = todayStats.find((s) => s.storeId === store.id)
+      const weekRow = weekStats.find((s) => s.storeId === store.id)
+      const monthRow = monthStats.find((s) => s.storeId === store.id)
 
       const conversionRate = (purchases: number, pageViews: number) =>
-        pageViews > 0 ? purchases / pageViews : 0;
+        pageViews > 0 ? purchases / pageViews : 0
 
       const overview = {
         today: {
@@ -75,7 +75,7 @@ export class AnalyticsService {
           totalEvents: todayRow?.totalEvents ?? 0,
           conversionRate: conversionRate(
             todayRow?.purchaseCount ?? 0,
-            todayRow?.pageViewCount ?? 0,
+            todayRow?.pageViewCount ?? 0
           ),
         },
         week: {
@@ -85,7 +85,7 @@ export class AnalyticsService {
           totalEvents: weekRow?.totalEvents ?? 0,
           conversionRate: conversionRate(
             weekRow?.purchaseCount ?? 0,
-            weekRow?.pageViewCount ?? 0,
+            weekRow?.pageViewCount ?? 0
           ),
         },
         month: {
@@ -95,17 +95,17 @@ export class AnalyticsService {
           totalEvents: monthRow?.totalEvents ?? 0,
           conversionRate: conversionRate(
             monthRow?.purchaseCount ?? 0,
-            monthRow?.pageViewCount ?? 0,
+            monthRow?.pageViewCount ?? 0
           ),
         },
-      };
+      }
 
       await redis.set(
         `analytics:${store.id}:overview`,
         JSON.stringify(overview),
         'EX',
-        120, // expires in 120 seconds
-      );
+        120 // expires in 120 seconds
+      )
 
       // onConflictDoUpdate because storeId+period row already
       // exists after the first cron run — update it instead
@@ -150,9 +150,9 @@ export class AnalyticsService {
             conversionRate: sql`excluded.conversion_rate`,
             computedAt: sql`now()`,
           },
-        });
+        })
 
-      this.logger.debug(`Updated metrics for store ${store.id}`);
+      this.logger.debug(`Updated metrics for store ${store.id}`)
     }
   }
 }

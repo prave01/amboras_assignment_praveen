@@ -160,16 +160,16 @@ Springs feel more natural than duration-based animations because they simulate r
 Tying visual changes directly to mouse position feels artificial because it lacks motion. Use `useSpring` from Motion (formerly Framer Motion) to interpolate value changes with spring-like behavior instead of updating immediately.
 
 ```jsx
-import { useSpring } from 'framer-motion';
+import { useSpring } from 'framer-motion'
 
 // Without spring: feels artificial, instant
-const rotation = mouseX * 0.1;
+const rotation = mouseX * 0.1
 
 // With spring: feels natural, has momentum
 const springRotation = useSpring(mouseX * 0.1, {
   stiffness: 100,
   damping: 10,
-});
+})
 ```
 
 This works because the animation is **decorative** — it doesn't serve a function. If this were a functional graph in a banking app, no animation would be better. Know when decoration helps and when it hinders.
@@ -349,8 +349,8 @@ This replaces the common React pattern of using `useEffect` to set `mounted: tru
 ```jsx
 // Legacy pattern (still works everywhere)
 useEffect(() => {
-  setMounted(true);
-}, []);
+  setMounted(true)
+}, [])
 // <div data-mounted={mounted}>
 ```
 
@@ -454,11 +454,11 @@ Overlay two images. Clip the top one with `clip-path: inset(0 50% 0 0)`. Adjust 
 Don't require dragging past a threshold. Calculate velocity: `Math.abs(dragDistance) / elapsedTime`. If velocity exceeds ~0.11, dismiss regardless of distance. A quick flick should be enough.
 
 ```js
-const timeTaken = new Date().getTime() - dragStartTime.current.getTime();
-const velocity = Math.abs(swipeAmount) / timeTaken;
+const timeTaken = new Date().getTime() - dragStartTime.current.getTime()
+const velocity = Math.abs(swipeAmount) / timeTaken
 
 if (Math.abs(swipeAmount) >= SWIPE_THRESHOLD || velocity > 0.11) {
-  dismiss();
+  dismiss()
 }
 ```
 
@@ -476,7 +476,7 @@ Ignore additional touch points after the initial drag begins. Without this, swit
 
 ```js
 function onPress() {
-  if (isDragging) return;
+  if (isDragging) return
   // Start drag...
 }
 ```
@@ -497,10 +497,10 @@ Changing a CSS variable on a parent recalculates styles for all children. In a d
 
 ```js
 // Bad: triggers recalc on all children
-element.style.setProperty('--swipe-amount', `${distance}px`);
+element.style.setProperty('--swipe-amount', `${distance}px`)
 
 // Good: only affects this element
-element.style.transform = `translateY(${distance}px)`;
+element.style.transform = `translateY(${distance}px)`
 ```
 
 ### Framer Motion hardware acceleration caveat
@@ -526,11 +526,14 @@ CSS animations run off the main thread. When the browser is busy loading a new p
 The Web Animations API gives you JavaScript control with CSS performance. Hardware-accelerated, interruptible, and no library needed.
 
 ```js
-element.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
-  duration: 1000,
-  fill: 'forwards',
-  easing: 'cubic-bezier(0.77, 0, 0.175, 1)',
-});
+element.animate(
+  [{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }],
+  {
+    duration: 1000,
+    fill: 'forwards',
+    easing: 'cubic-bezier(0.77, 0, 0.175, 1)',
+  }
+)
 ```
 
 ## Accessibility
@@ -549,8 +552,8 @@ Animations can cause motion sickness. Reduced motion means fewer and gentler ani
 ```
 
 ```jsx
-const shouldReduceMotion = useReducedMotion();
-const closedX = shouldReduceMotion ? 0 : '-100%';
+const shouldReduceMotion = useReducedMotion()
+const closedX = shouldReduceMotion ? 0 : '-100%'
 ```
 
 ### Touch device hover states

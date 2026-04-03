@@ -1,13 +1,13 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { EventsModule } from './events/events.module';
-import { AnalyticsModule } from './analytics/analytics.module';
-import { BullModule } from '@nestjs/bullmq';
-import { UsersModule } from './users/users.module';
-import { ScheduleModule } from '@nestjs/schedule';
-import { LoggerMiddleware } from './logger.middleware';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { AuthModule } from './auth/auth.module'
+import { EventsModule } from './events/events.module'
+import { AnalyticsModule } from './analytics/analytics.module'
+import { BullModule } from '@nestjs/bullmq'
+import { UsersModule } from './users/users.module'
+import { ScheduleModule } from '@nestjs/schedule'
+import { LoggerMiddleware } from './logger.middleware'
 
 @Module({
   imports: [
@@ -28,6 +28,6 @@ import { LoggerMiddleware } from './logger.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*')
   }
 }

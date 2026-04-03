@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { EventsService } from './events.service';
-import { EventsController } from './events.controller';
-import { BullModule } from '@nestjs/bullmq';
-import { EventsProcessor } from './event.processor';
+import { Module } from '@nestjs/common'
+import { EventsService } from './events.service'
+import { EventsController } from './events.controller'
+import { BullModule } from '@nestjs/bullmq'
+import { EventsProcessor } from './event.processor'
 
 @Module({
   imports: [

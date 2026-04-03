@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
-  const data = await req.json();
+  const data = await req.json()
 
-  console.log('Received event:', data);
+  console.log('Received event:', data)
 
-  return NextResponse.json({ status: 'success' });
+  return NextResponse.json({ status: 'success' })
 }

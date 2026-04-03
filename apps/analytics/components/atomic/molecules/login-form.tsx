@@ -1,50 +1,53 @@
-'use client';
+'use client'
 
-import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { AlertCircle, LoaderCircle } from 'lucide-react';
-import { apiPost, ApiError } from '@/lib/api';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { FormEvent, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { AlertCircle, LoaderCircle } from 'lucide-react'
+import { apiPost, ApiError } from '@/lib/api'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 type LoginResponse = {
-  message: string;
-  access_token?: string;
-};
+  message: string
+  access_token?: string
+}
 
 export function LoginForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage(null);
+    event.preventDefault()
+    setIsSubmitting(true)
+    setErrorMessage(null)
 
     try {
-      await apiPost<LoginResponse>('/auth/login', { email, password });
-      router.replace('/dashboard');
-      router.refresh();
+      await apiPost<LoginResponse>('/auth/login', { email, password })
+      router.replace('/dashboard')
+      router.refresh()
     } catch (error) {
       const message =
         error instanceof ApiError
           ? error.message
-          : 'Unable to sign in. Please verify your credentials.';
-      setErrorMessage(message);
+          : 'Unable to sign in. Please verify your credentials.'
+      setErrorMessage(message)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-xs tracking-wide text-muted-foreground">
+        <Label
+          htmlFor="email"
+          className="text-xs tracking-wide text-muted-foreground"
+        >
           Email Address
         </Label>
         <Input
@@ -60,7 +63,10 @@ export function LoginForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-xs tracking-wide text-muted-foreground">
+        <Label
+          htmlFor="password"
+          className="text-xs tracking-wide text-muted-foreground"
+        >
           Password
         </Label>
         <Input
@@ -85,7 +91,9 @@ export function LoginForm() {
 
       <Button
         type="submit"
-        className="h-11 w-full rounded-xl bg-primary text-primary-foreground transition-transform duration-150 ease-out hover:bg-primary/90 active:scale-[0.98]"
+        className="h-11 w-full rounded-xl bg-primary text-primary-foreground
+          transition-transform duration-150 ease-out hover:bg-primary/90
+          active:scale-[0.98]"
         disabled={isSubmitting}
       >
         {isSubmitting ? (
@@ -98,5 +106,5 @@ export function LoginForm() {
         )}
       </Button>
     </form>
-  );
+  )
 }

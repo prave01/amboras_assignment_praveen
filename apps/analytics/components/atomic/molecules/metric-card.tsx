@@ -1,15 +1,20 @@
-'use client';
+'use client'
 
-import type { LucideIcon } from 'lucide-react';
-import { ArrowUpRight } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
+import type { LucideIcon } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card'
 
 interface MetricCardProps {
-  title: string;
-  value: string;
-  icon: LucideIcon;
-  isHot?: boolean;
-  delayMs?: number;
+  title: string
+  value: string
+  icon: LucideIcon
+  isHot?: boolean
+  delayMs?: number
 }
 
 export function MetricCard({
@@ -23,12 +28,19 @@ export function MetricCard({
     <Card
       className={[
         'panel-surface fade-up rounded-2xl border-white/70 bg-white/78 transition-[transform,box-shadow,border-color] duration-500 ease-out',
-        isHot ? 'border-emerald-300/80 shadow-[0_20px_45px_-28px_rgba(16,185,129,0.45)]' : '',
+        isHot
+          ? 'border-emerald-300/80 shadow-[0_20px_45px_-28px_rgba(16,185,129,0.45)]'
+          : '',
       ].join(' ')}
       style={{ animationDelay: `${delayMs}ms` }}
     >
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-        <CardDescription className="max-w-[10ch] text-[0.78rem] font-medium leading-4 tracking-[-0.01em] text-slate-600">
+      <CardHeader
+        className="flex flex-row items-start justify-between space-y-0 pb-2"
+      >
+        <CardDescription
+          className="max-w-[10ch] text-[0.78rem] font-medium leading-4
+            tracking-[-0.01em] text-slate-600"
+        >
           {title}
         </CardDescription>
         <div
@@ -40,7 +52,9 @@ export function MetricCard({
           ].join(' ')}
         >
           {isHot ? (
-            <ArrowUpRight className="size-4 animate-[gain-arrow_1.1s_ease-out_both]" />
+            <ArrowUpRight
+              className="size-4 animate-[gain-arrow_1.1s_ease-out_both]"
+            />
           ) : (
             <Icon className="size-4" />
           )}
@@ -59,5 +73,5 @@ export function MetricCard({
         </p>
       </CardContent>
     </Card>
-  );
+  )
 }

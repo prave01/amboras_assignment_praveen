@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   Activity,
@@ -6,19 +6,23 @@ import {
   MousePointerClick,
   ShoppingBag,
   TrendingUp,
-} from 'lucide-react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { MetricCard } from '@/components/atomic/molecules/metric-card';
-import type { DashboardMetricCard } from '@/lib/analytics/dashboard';
+} from 'lucide-react'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { MetricCard } from '@/components/atomic/molecules/metric-card'
+import type { DashboardMetricCard } from '@/lib/analytics/dashboard'
 
 interface DashboardOverviewGridProps {
-  cards: DashboardMetricCard[];
-  gainFlash: Record<string, boolean>;
-  isLoading: boolean;
+  cards: DashboardMetricCard[]
+  gainFlash: Record<string, boolean>
+  isLoading: boolean
 }
 
-export function DashboardOverviewGrid({ cards, gainFlash, isLoading }: DashboardOverviewGridProps) {
+export function DashboardOverviewGrid({
+  cards,
+  gainFlash,
+  isLoading,
+}: DashboardOverviewGridProps) {
   return (
     <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
       {isLoading
@@ -46,5 +50,5 @@ export function DashboardOverviewGrid({ cards, gainFlash, isLoading }: Dashboard
             />
           ))}
     </section>
-  );
+  )
 }

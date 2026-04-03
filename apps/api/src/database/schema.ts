@@ -7,8 +7,8 @@ import {
   integer,
   uniqueIndex,
   index,
-} from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
+} from 'drizzle-orm/pg-core'
+import { createInsertSchema } from 'drizzle-zod'
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -16,10 +16,10 @@ export const users = pgTable('users', {
   password: text('password').notNull(),
   name: text('name').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+})
 
-export type UserInsert = typeof users.$inferInsert;
-export type User = typeof users.$inferSelect;
+export type UserInsert = typeof users.$inferInsert
+export type User = typeof users.$inferSelect
 
 export const stores = pgTable('stores', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -30,9 +30,9 @@ export const stores = pgTable('stores', {
   slug: text('slug').notNull().unique(),
   currency: text('currency').notNull().default('USD'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+})
 
-export type StoreInsert = typeof stores.$inferInsert;
+export type StoreInsert = typeof stores.$inferInsert
 
 export const products = pgTable('products', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -43,9 +43,9 @@ export const products = pgTable('products', {
   price: numeric('price', { precision: 10, scale: 2 }).notNull(),
   category: text('category').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+})
 
-export type ProductInsert = typeof products.$inferInsert;
+export type ProductInsert = typeof products.$inferInsert
 
 export const events = pgTable(
   'events',
@@ -63,14 +63,14 @@ export const events = pgTable(
   (table) => ({
     storeTimeIdx: index('idx_events_store_time').on(
       table.storeId,
-      table.timestamp,
+      table.timestamp
     ),
     purchasesIdx: index('idx_events_purchases').on(table.storeId, table.amount),
     eventIdIdx: uniqueIndex('idx_events_event_id').on(table.eventId),
-  }),
-);
+  })
+)
 
-export type EventInsert = typeof events.$inferInsert;
+export type EventInsert = typeof events.$inferInsert
 
 export const preAggregatedMetrics = pgTable(
   'pre_aggregated_metrics',
@@ -94,13 +94,13 @@ export const preAggregatedMetrics = pgTable(
   (table) => ({
     storeperiodIdx: uniqueIndex('idx_metrics_store_period').on(
       table.storeId,
-      table.period,
+      table.period
     ),
-  }),
-);
+  })
+)
 
 export const PreAggregatedMetricsSchema =
-  createInsertSchema(preAggregatedMetrics);
+  createInsertSchema(preAggregatedMetrics)
 
 export const topProductsCache = pgTable(
   'top_products_cache',
@@ -125,7 +125,7 @@ export const topProductsCache = pgTable(
     storeperiodIdx: uniqueIndex('idx_top_products_store_period_rank').on(
       table.storeId,
       table.period,
-      table.rank,
+      table.rank
     ),
-  }),
-);
+  })
+)
