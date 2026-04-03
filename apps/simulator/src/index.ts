@@ -1,65 +1,65 @@
-import axios from 'axios'
-import { config } from 'dotenv'
-import { SampleStores, SampleProducts } from '@repo/seed-data'
+import axios from "axios";
+import { config } from "dotenv";
+import { SampleStores, SampleProducts } from "@repo/seed-data";
 
 config({
-  path: '../../.env.local',
-})
+  path: "../../.env.local",
+});
 
 interface Product {
-  id: string
-  store_id: string
-  price: number
+  id: string;
+  store_id: string;
+  price: number;
 }
 
 interface Store {
-  id: string
-  currency: string
+  id: string;
+  currency: string;
 }
 
 interface SeedData {
-  stores: Store[]
-  products: Product[]
+  stores: Store[];
+  products: Product[];
 }
 
 interface Event {
-  event_id: string
-  store_id: string
-  event_type: string
-  timestamp: string
-  data: Record<string, unknown>
+  event_id: string;
+  store_id: string;
+  event_type: string;
+  timestamp: string;
+  data: Record<string, unknown>;
 }
 
-const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:8080'
+const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:8080";
 
-const EVENTS_PER_SECOND = Number(process.env.EVENTS_PER_SECOND ?? 50)
-const BATCH_SIZE = Number(process.env.BATCH_SIZE ?? 20)
-const REALISTIC_MODE = process.env.REALISTIC_MODE! || false
+const EVENTS_PER_SECOND = Number(process.env.EVENTS_PER_SECOND ?? 50);
+const BATCH_SIZE = Number(process.env.BATCH_SIZE ?? 20);
+const REALISTIC_MODE = process.env.REALISTIC_MODE! || false;
 
 const EVENT_TYPES = [
-  { type: 'page_view', weight: 50 },
-  { type: 'add_to_cart', weight: 20 },
-  { type: 'remove_from_cart', weight: 10 },
-  { type: 'checkout_started', weight: 12 },
-  { type: 'purchase', weight: 8 },
-]
+  { type: "page_view", weight: 50 },
+  { type: "add_to_cart", weight: 20 },
+  { type: "remove_from_cart", weight: 10 },
+  { type: "checkout_started", weight: 12 },
+  { type: "purchase", weight: 8 },
+];
 
 function pickEventType(): string {
-  const total = EVENT_TYPES.reduce((sum, e) => sum + e.weight, 0)
-  let rand = Math.random() * total
+  const total = EVENT_TYPES.reduce((sum, e) => sum + e.weight, 0);
+  let rand = Math.random() * total;
   for (const e of EVENT_TYPES) {
-    rand -= e.weight
-    if (rand <= 0) return e.type
+    rand -= e.weight;
+    if (rand <= 0) return e.type;
   }
-  return 'page_view'
+  return "page_view";
 }
 
 function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)]!
+  return arr[Math.floor(Math.random() * arr.length)]!;
 }
 
 function generateEventId(): string {
-  return `evt_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
+  return `evt_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 }
 
 function trafficMultiplier(hour: number): number {
@@ -88,26 +88,26 @@ function trafficMultiplier(hour: number): number {
     21: 1.4,
     22: 0.8,
     23: 0.4,
-  }
-  return curve[hour] ?? 1.0
+  };
+  return curve[hour] ?? 1.0;
 }
 
 // Build a single event for a given store + product pool
 function buildEvent(store: Store, products: Product[]): Event {
-  const eventType = pickEventType()
-  const product = pick(products)
+  const eventType = pickEventType();
+  const product = pick(products);
 
-  const baseData: Record<string, unknown> = {}
+  const baseData: Record<string, unknown> = {};
 
-  if (eventType === 'purchase') {
-    baseData.product_id = product.id
-    baseData.amount = product.price
-    baseData.currency = store.currency
+  if (eventType === "purchase") {
+    baseData.product_id = product.id;
+    baseData.amount = product.price;
+    baseData.currency = store.currency;
   } else if (
-    ['add_to_cart', 'remove_from_cart', 'checkout_started'].includes(eventType)
+    ["add_to_cart", "remove_from_cart", "checkout_started"].includes(eventType)
   ) {
-    baseData.product_id = product.id
-    baseData.currency = store.currency
+    baseData.product_id = product.id;
+    baseData.currency = store.currency;
   }
 
   return {
@@ -116,7 +116,7 @@ function buildEvent(store: Store, products: Product[]): Event {
     event_type: eventType,
     timestamp: new Date().toISOString(),
     data: baseData,
-  }
+  };
 }
 
 // Send a batch of events to the ingest endpoint
@@ -126,21 +126,21 @@ async function sendBatch(events: Event[]): Promise<void> {
       `${API_BASE_URL}/api/v1/events/ingest`,
       { events },
       {
-        headers: { 'Content-Type': 'application/json' },
-        timeout: 5000,
-      }
-    )
+        headers: { "Content-Type": "application/json" },
+        // timeout: 5000, // add timeout if desired
+      },
+    );
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const status = err.response?.status
-      const responseData = err.response?.data
-      const code = err.code
+      const status = err.response?.status;
+      const responseData = err.response?.data;
+      const code = err.code;
       console.error(
-        `[simulator] Batch failed: ${code ?? 'unknown'}${status ? ` status=${status}` : ''}`,
-        responseData ?? err.message
-      )
+        `[simulator] Batch failed: ${code ?? "unknown"}${status ? ` status=${status}` : ""}`,
+        responseData ?? err.message,
+      );
     } else {
-      console.error('[simulator] Batch failed:', err)
+      console.error("[simulator] Batch failed:", err);
     }
   }
 }
@@ -157,69 +157,69 @@ async function run() {
       store_id: product.store_id,
       price: product.price,
     })),
-  }
+  };
 
   // Build a per-store product lookup for fast access
-  const productsByStore = new Map<string, Product[]>()
+  const productsByStore = new Map<string, Product[]>();
   for (const store of seed.stores) {
     productsByStore.set(
       store.id,
-      seed.products.filter((p) => p.store_id === store.id)
-    )
+      seed.products.filter((p) => p.store_id === store.id),
+    );
   }
 
-  console.log(`[simulator] Starting`)
-  console.log(`[simulator] Stores: ${seed.stores.length}`)
-  console.log(`[simulator] Products: ${seed.products.length}`)
-  console.log(`[simulator] Target rate: ${EVENTS_PER_SECOND} events/sec`)
-  console.log(`[simulator] Batch size: ${BATCH_SIZE}`)
-  console.log(`[simulator] Realistic mode: ${REALISTIC_MODE}`)
-  console.log(`[simulator] API: ${API_BASE_URL}`)
+  console.log(`[simulator] Starting`);
+  console.log(`[simulator] Stores: ${seed.stores.length}`);
+  console.log(`[simulator] Products: ${seed.products.length}`);
+  console.log(`[simulator] Target rate: ${EVENTS_PER_SECOND} events/sec`);
+  console.log(`[simulator] Batch size: ${BATCH_SIZE}`);
+  console.log(`[simulator] Realistic mode: ${REALISTIC_MODE}`);
+  console.log(`[simulator] API: ${API_BASE_URL}`);
 
-  let batch: Event[] = []
+  let batch: Event[] = [];
 
   // Interval fires every (1000ms / eventsPerSecond) to hit the target rate
-  const baseIntervalMs = 1000 / EVENTS_PER_SECOND
+  const baseIntervalMs = 1000 / EVENTS_PER_SECOND;
 
   const tick = async () => {
     // In realistic mode, scale the effective rate by time-of-day
     const multiplier = REALISTIC_MODE
       ? trafficMultiplier(new Date().getHours())
-      : 1.6
+      : 1.6;
 
     if (Math.random() > multiplier) {
-      return
+      return;
     }
 
-    const store = pick(seed.stores)
-    const products = productsByStore.get(store.id) ?? []
-    if (products.length === 0) return
+    const store = pick(seed.stores);
+    const products = productsByStore.get(store.id) ?? [];
+    if (products.length === 0) return;
 
-    batch.push(buildEvent(store, products))
+    batch.push(buildEvent(store, products));
 
     if (batch.length >= BATCH_SIZE) {
-      const toSend = batch.splice(0, BATCH_SIZE)
-      console.log(`[simulator] Sending batch of ${toSend.length} events`)
-      await sendBatch(toSend)
+      const toSend = batch.splice(0, BATCH_SIZE);
+      console.log(`[simulator] Sending batch of ${toSend.length} events`);
+      await sendBatch(toSend);
     }
-  }
+  };
 
   setInterval(() => {
-    tick().catch((err) => console.error('[simulator] Tick error:', err))
-  }, baseIntervalMs)
+    tick().catch((err) => console.error("[simulator] Tick error:", err));
+  }, baseIntervalMs);
 
   setInterval(async () => {
     if (batch.length > 0) {
-      const toSend = batch.splice(0, batch.length)
-      console.log(`[simulator] Flushing ${toSend.length} remaining events`)
-      await sendBatch(toSend)
+      const toSend = batch.splice(0, batch.length);
+      console.log(`[simulator] Flushing ${toSend.length} remaining events`);
+      await sendBatch(toSend);
     }
-  }, 5000)
+  }, 5000);
 }
 
 setTimeout(() => {
   run().catch((err) => {
-    console.error('[simulator] Fatal error:', err)
-    process.exit(1)
-  })
-}, 5000)
+    console.error("[simulator] Fatal error:", err);
+    process.exit(1);
+  });
+}, 5000);
