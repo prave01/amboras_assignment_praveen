@@ -19,7 +19,7 @@ export class AnalyticsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('overview')
-  async getOveriew(@Request() req) {
+  async getOveriew(@Request() req: ReqDto) {
     try {
       const storeId = req.user?.storeId;
 
