@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { AlertCircle, LoaderCircle } from "lucide-react";
-import { apiPost, ApiError } from "@/lib/api";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { AlertCircle, LoaderCircle } from 'lucide-react';
+import { apiPost, ApiError } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type LoginResponse = {
   message: string;
@@ -16,8 +16,8 @@ type LoginResponse = {
 
 export function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -27,14 +27,14 @@ export function LoginForm() {
     setErrorMessage(null);
 
     try {
-      await apiPost<LoginResponse>("/auth/login", { email, password });
-      router.replace("/dashboard");
+      await apiPost<LoginResponse>('/auth/login', { email, password });
+      router.replace('/dashboard');
       router.refresh();
     } catch (error) {
       const message =
         error instanceof ApiError
           ? error.message
-          : "Unable to sign in. Please verify your credentials.";
+          : 'Unable to sign in. Please verify your credentials.';
       setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
@@ -94,7 +94,7 @@ export function LoginForm() {
             Signing you in
           </span>
         ) : (
-          "Continue to dashboard"
+          'Continue to dashboard'
         )}
       </Button>
     </form>

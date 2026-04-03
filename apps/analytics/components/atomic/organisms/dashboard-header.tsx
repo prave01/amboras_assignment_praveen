@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DashboardHeaderProps {
   onRefresh: () => void;
@@ -26,7 +26,9 @@ export function DashboardHeader({
     <header className="fade-up panel-surface rounded-3xl px-6 py-5 md:px-8 md:py-6">
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-xs font-semibold tracking-[0.34em] text-muted-foreground">AMBORAS BOARD</p>
+          <p className="text-xs font-semibold tracking-[0.34em] text-muted-foreground">
+            AMBORAS BOARD
+          </p>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             {isIdentityLoading ? (
               <>
@@ -35,11 +37,17 @@ export function DashboardHeader({
               </>
             ) : (
               <>
-                <Badge variant="outline" className="rounded-full border-primary/15 bg-primary/5 px-3 py-1 text-primary">
-                  Store: {storeName ?? "Unknown store"}
+                <Badge
+                  variant="outline"
+                  className="rounded-full border-primary/15 bg-primary/5 px-3 py-1 text-primary"
+                >
+                  Store: {storeName ?? 'Unknown store'}
                 </Badge>
-                <Badge variant="outline" className="rounded-full border-slate-200 bg-slate-50 px-3 py-1 text-slate-700">
-                  Owner: {ownerName ?? "Unknown owner"}
+                <Badge
+                  variant="outline"
+                  className="rounded-full border-slate-200 bg-slate-50 px-3 py-1 text-slate-700"
+                >
+                  Owner: {ownerName ?? 'Unknown owner'}
                 </Badge>
               </>
             )}
@@ -48,10 +56,14 @@ export function DashboardHeader({
             Commercial telemetry at a glance
           </h1>
           <p className="mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
-            Unified trendlines for revenue, funnel quality, and product momentum. Values refresh from live event ingestion.
+            Unified trendlines for revenue, funnel quality, and product momentum. Values refresh
+            from live event ingestion.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <Badge variant="outline" className="rounded-full border-primary/15 bg-primary/5 px-3 py-1 text-primary">
+            <Badge
+              variant="outline"
+              className="rounded-full border-primary/15 bg-primary/5 px-3 py-1 text-primary"
+            >
               Live updates enabled
             </Badge>
             <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/70 px-3 py-1">
@@ -75,7 +87,7 @@ export function DashboardHeader({
             disabled={isLoggingOut}
           >
             <LogOut className="mr-2 size-4" />
-            {isLoggingOut ? "Signing out" : "Logout"}
+            {isLoggingOut ? 'Signing out' : 'Logout'}
           </Button>
         </div>
       </div>

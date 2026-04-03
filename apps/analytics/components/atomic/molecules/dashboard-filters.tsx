@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import type { TimeRange } from "@/lib/analytics/dashboard";
+import { Filter } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import type { TimeRange } from '@/lib/analytics/dashboard';
 
 interface DashboardFiltersProps {
   range: TimeRange;
@@ -17,7 +17,7 @@ interface DashboardFiltersProps {
   isLiveView: boolean;
 }
 
-const TIME_RANGES: TimeRange[] = ["today", "week", "month", "custom"];
+const TIME_RANGES: TimeRange[] = ['today', 'week', 'month', 'custom'];
 
 export function DashboardFilters({
   range,
@@ -30,7 +30,7 @@ export function DashboardFilters({
   onGoLive,
   isLiveView,
 }: DashboardFiltersProps) {
-  const isCustomRange = range === "custom";
+  const isCustomRange = range === 'custom';
 
   return (
     <section className="panel-surface mt-6 rounded-3xl px-5 py-4 md:px-6 md:py-5">
@@ -49,7 +49,7 @@ export function DashboardFilters({
           {TIME_RANGES.map((option) => (
             <Button
               key={option}
-              variant={range === option ? "default" : "outline"}
+              variant={range === option ? 'default' : 'outline'}
               size="sm"
               className="rounded-full px-4 capitalize transition-transform duration-150 ease-out active:scale-[0.98]"
               onClick={() => onRangeChange(option)}
@@ -98,15 +98,16 @@ export function DashboardFilters({
 
       <div className="mt-4 flex flex-col gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p>
-          Filters update the table and activity feed automatically. Relative timestamps keep ticking in the background.
+          Filters update the table and activity feed automatically. Relative timestamps keep ticking
+          in the background.
         </p>
         <Button
-          variant={isLiveView ? "default" : "outline"}
+          variant={isLiveView ? 'default' : 'outline'}
           className="h-10 rounded-xl border-emerald-200 bg-emerald-50 text-emerald-700 transition-transform duration-150 ease-out hover:bg-emerald-100 active:scale-[0.98]"
           onClick={onGoLive}
         >
           <span className="mr-2 size-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.15)]" />
-          {isLiveView ? "Live now" : "Go live"}
+          {isLiveView ? 'Live now' : 'Go live'}
         </Button>
       </div>
     </section>

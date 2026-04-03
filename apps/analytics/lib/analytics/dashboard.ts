@@ -1,7 +1,7 @@
-import type { LucideIcon } from "lucide-react";
-import { apiPost, type ApiEnvelope } from "@/lib/api";
+import type { LucideIcon } from 'lucide-react';
+import { apiPost, type ApiEnvelope } from '@/lib/api';
 
-export type TimeRange = "today" | "week" | "month" | "custom";
+export type TimeRange = 'today' | 'week' | 'month' | 'custom';
 
 export type PeriodMetrics = {
   totalRevenue: number | string;
@@ -55,7 +55,7 @@ export function buildFilterPayload(
   startDate: string,
   endDate: string,
 ): AnalyticsFilterPayload {
-  if (period === "custom") {
+  if (period === 'custom') {
     return { period, startDate, endDate };
   }
 
@@ -64,13 +64,27 @@ export function buildFilterPayload(
 
 export function createAnalyticsFetchers() {
   const metricFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
-    apiPost<ApiEnvelope<unknown>>("/analytics/overview", buildFilterPayload(period, startDate, endDate));
+    apiPost<ApiEnvelope<unknown>>(
+      '/analytics/overview',
+      buildFilterPayload(period, startDate, endDate),
+    );
 
-  const topProductsFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
-    apiPost<ApiEnvelope<TopProduct[]>>("/analytics/top-products", buildFilterPayload(period, startDate, endDate));
+  const topProductsFetcher = ([, period, startDate, endDate]: [
+    string,
+    TimeRange,
+    string,
+    string,
+  ]) =>
+    apiPost<ApiEnvelope<TopProduct[]>>(
+      '/analytics/top-products',
+      buildFilterPayload(period, startDate, endDate),
+    );
 
   const activityFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
-    apiPost<ApiEnvelope<RecentEvent[]>>("/analytics/recent-activity", buildFilterPayload(period, startDate, endDate));
+    apiPost<ApiEnvelope<RecentEvent[]>>(
+      '/analytics/recent-activity',
+      buildFilterPayload(period, startDate, endDate),
+    );
 
   return { metricFetcher, topProductsFetcher, activityFetcher };
 }
@@ -89,11 +103,11 @@ export function normalizeOverview(payload: ApiEnvelope<unknown> | undefined): Ov
   const raw = payload?.data;
 
   if (
-    typeof raw === "object" &&
+    typeof raw === 'object' &&
     raw !== null &&
-    "today" in raw &&
-    "week" in raw &&
-    "month" in raw
+    'today' in raw &&
+    'week' in raw &&
+    'month' in raw
   ) {
     return raw as OverviewResponse;
   }
@@ -104,9 +118,9 @@ export function normalizeOverview(payload: ApiEnvelope<unknown> | undefined): Ov
     month: defaultPeriod(),
   };
 
-  if (typeof raw === "object" && raw !== null && "period" in raw) {
-    const period = String((raw as { period?: unknown }).period ?? "");
-    if (period === "today" || period === "week" || period === "month") {
+  if (typeof raw === 'object' && raw !== null && 'period' in raw) {
+    const period = String((raw as { period?: unknown }).period ?? '');
+    if (period === 'today' || period === 'week' || period === 'month') {
       base[period] = {
         ...defaultPeriod(),
         ...(raw as Partial<PeriodMetrics>),
@@ -122,13 +136,15 @@ export function normalizeTopProducts(payload: ApiEnvelope<TopProduct[]> | undefi
   return records.slice(0, 10).map((product, index) => ({
     ...product,
     rank: product.rank ?? index + 1,
-    productName: product.productName ?? product.productId ?? "Unknown product",
+    productName: product.productName ?? product.productId ?? 'Unknown product',
     totalRevenue: product.totalRevenue ?? product.revenue ?? 0,
     purchaseCount: product.purchaseCount ?? 0,
   }));
 }
 
-export function normalizeRecentActivity(payload: ApiEnvelope<RecentEvent[]> | undefined): RecentEvent[] {
+export function normalizeRecentActivity(
+  payload: ApiEnvelope<RecentEvent[]> | undefined,
+): RecentEvent[] {
   if (!Array.isArray(payload?.data)) {
     return [];
   }
@@ -143,15 +159,15 @@ export function toNumericValue(value: number | string | null | undefined): numbe
 
 export function eventColorClass(eventType: string): string {
   switch (eventType) {
-    case "purchase":
-      return "bg-emerald-100 text-emerald-700 border-emerald-200";
-    case "add_to_cart":
-      return "bg-sky-100 text-sky-700 border-sky-200";
-    case "remove_from_cart":
-      return "bg-rose-100 text-rose-700 border-rose-200";
-    case "checkout_started":
-      return "bg-amber-100 text-amber-700 border-amber-200";
+    case 'purchase':
+      return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+    case 'add_to_cart':
+      return 'bg-sky-100 text-sky-700 border-sky-200';
+    case 'remove_from_cart':
+      return 'bg-rose-100 text-rose-700 border-rose-200';
+    case 'checkout_started':
+      return 'bg-amber-100 text-amber-700 border-amber-200';
     default:
-      return "bg-zinc-100 text-zinc-700 border-zinc-200";
+      return 'bg-zinc-100 text-zinc-700 border-zinc-200';
   }
 }

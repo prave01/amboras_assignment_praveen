@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AlertTriangle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -10,10 +10,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { formatCurrency, formatInteger } from "@/lib/format";
-import type { TopProduct } from "@/lib/analytics/dashboard";
+} from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
+import { formatCurrency, formatInteger } from '@/lib/format';
+import type { TopProduct } from '@/lib/analytics/dashboard';
 
 interface TopProductsTableProps {
   products: TopProduct[];
@@ -23,7 +23,10 @@ interface TopProductsTableProps {
 
 export function TopProductsTable({ products, isLoading, hasError }: TopProductsTableProps) {
   return (
-    <Card className="panel-surface fade-up rounded-3xl border-white/65 bg-white/75" style={{ animationDelay: "120ms" }}>
+    <Card
+      className="panel-surface fade-up rounded-3xl border-white/65 bg-white/75"
+      style={{ animationDelay: '120ms' }}
+    >
       <CardHeader>
         <CardTitle className="font-heading text-2xl">Top Products</CardTitle>
         <CardDescription>Highest-performing products by purchase revenue.</CardDescription>
@@ -60,10 +63,12 @@ export function TopProductsTable({ products, isLoading, hasError }: TopProductsT
                 </TableRow>
               ) : (
                 products.map((product) => (
-                  <TableRow key={`${product.productId ?? "unknown"}-${product.rank}`}>
+                  <TableRow key={`${product.productId ?? 'unknown'}-${product.rank}`}>
                     <TableCell className="font-medium">#{product.rank}</TableCell>
                     <TableCell>{product.productName}</TableCell>
-                    <TableCell className="text-right font-medium">{formatCurrency(product.totalRevenue)}</TableCell>
+                    <TableCell className="text-right font-medium">
+                      {formatCurrency(product.totalRevenue)}
+                    </TableCell>
                     <TableCell className="text-right text-muted-foreground">
                       {formatInteger(product.purchaseCount)}
                     </TableCell>

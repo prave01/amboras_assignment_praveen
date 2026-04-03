@@ -1,9 +1,9 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { Cron, CronExpression } from "@nestjs/schedule";
-import { count, eq, gte, sql, sum } from "drizzle-orm";
-import { db } from "src/database/db";
-import { events, preAggregatedMetrics, stores } from "src/database/schema";
-import { redis } from "src/redis/redis.client";
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { count, eq, gte, sql, sum } from 'drizzle-orm';
+import { db } from 'src/database/db';
+import { events, preAggregatedMetrics, stores } from 'src/database/schema';
+import { redis } from 'src/redis/redis.client';
 
 @Injectable()
 export class AnalyticsService {
@@ -11,7 +11,7 @@ export class AnalyticsService {
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   async handlePreaggregationJob() {
-    this.logger.debug("Running pre-aggregation job...");
+    this.logger.debug('Running pre-aggregation job...');
 
     const todayStart = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -26,8 +26,8 @@ export class AnalyticsService {
         .select({
           storeId: events.storeId,
           totalRevenue: sum(events.amount),
-          purchaseCount: count(eq(events.eventType, "purchase")),
-          pageViewCount: count(eq(events.eventType, "page_view")),
+          purchaseCount: count(eq(events.eventType, 'purchase')),
+          pageViewCount: count(eq(events.eventType, 'page_view')),
           totalEvents: count(),
         })
         .from(events)
@@ -38,8 +38,8 @@ export class AnalyticsService {
         .select({
           storeId: events.storeId,
           totalRevenue: sum(events.amount),
-          purchaseCount: count(eq(events.eventType, "purchase")),
-          pageViewCount: count(eq(events.eventType, "page_view")),
+          purchaseCount: count(eq(events.eventType, 'purchase')),
+          pageViewCount: count(eq(events.eventType, 'page_view')),
           totalEvents: count(),
         })
         .from(events)
@@ -50,8 +50,8 @@ export class AnalyticsService {
         .select({
           storeId: events.storeId,
           totalRevenue: sum(events.amount),
-          purchaseCount: count(eq(events.eventType, "purchase")),
-          pageViewCount: count(eq(events.eventType, "page_view")),
+          purchaseCount: count(eq(events.eventType, 'purchase')),
+          pageViewCount: count(eq(events.eventType, 'page_view')),
           totalEvents: count(),
         })
         .from(events)
@@ -69,7 +69,7 @@ export class AnalyticsService {
 
       const overview = {
         today: {
-          totalRevenue: parseFloat(todayRow?.totalRevenue ?? "0"),
+          totalRevenue: parseFloat(todayRow?.totalRevenue ?? '0'),
           purchaseCount: todayRow?.purchaseCount ?? 0,
           pageViewCount: todayRow?.pageViewCount ?? 0,
           totalEvents: todayRow?.totalEvents ?? 0,
@@ -79,7 +79,7 @@ export class AnalyticsService {
           ),
         },
         week: {
-          totalRevenue: parseFloat(weekRow?.totalRevenue ?? "0"),
+          totalRevenue: parseFloat(weekRow?.totalRevenue ?? '0'),
           purchaseCount: weekRow?.purchaseCount ?? 0,
           pageViewCount: weekRow?.pageViewCount ?? 0,
           totalEvents: weekRow?.totalEvents ?? 0,
@@ -89,7 +89,7 @@ export class AnalyticsService {
           ),
         },
         month: {
-          totalRevenue: parseFloat(monthRow?.totalRevenue ?? "0"),
+          totalRevenue: parseFloat(monthRow?.totalRevenue ?? '0'),
           purchaseCount: monthRow?.purchaseCount ?? 0,
           pageViewCount: monthRow?.pageViewCount ?? 0,
           totalEvents: monthRow?.totalEvents ?? 0,
@@ -103,7 +103,7 @@ export class AnalyticsService {
       await redis.set(
         `analytics:${store.id}:overview`,
         JSON.stringify(overview),
-        "EX",
+        'EX',
         120, // expires in 120 seconds
       );
 
@@ -114,7 +114,7 @@ export class AnalyticsService {
         .values([
           {
             storeId: store.id,
-            period: "today",
+            period: 'today',
             totalRevenue: overview.today.totalRevenue.toString(),
             purchaseCount: overview.today.purchaseCount,
             pageViewCount: overview.today.pageViewCount,
@@ -123,7 +123,7 @@ export class AnalyticsService {
           },
           {
             storeId: store.id,
-            period: "week",
+            period: 'week',
             totalRevenue: overview.week.totalRevenue.toString(),
             purchaseCount: overview.week.purchaseCount,
             pageViewCount: overview.week.pageViewCount,
@@ -132,7 +132,7 @@ export class AnalyticsService {
           },
           {
             storeId: store.id,
-            period: "month",
+            period: 'month',
             totalRevenue: overview.month.totalRevenue.toString(),
             purchaseCount: overview.month.purchaseCount,
             pageViewCount: overview.month.pageViewCount,

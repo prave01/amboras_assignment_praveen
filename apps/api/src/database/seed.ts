@@ -1,5 +1,5 @@
-import { DatabaseError } from "pg";
-import { db } from "./db";
+import { DatabaseError } from 'pg';
+import { db } from './db';
 import {
   users,
   stores,
@@ -7,14 +7,14 @@ import {
   UserInsert,
   StoreInsert,
   ProductInsert,
-} from "./schema";
-import { SampleUsers, SampleStores, SampleProducts } from "@repo/seed-data";
-import bcrypt from "bcrypt";
+} from './schema';
+import { SampleUsers, SampleStores, SampleProducts } from '@repo/seed-data';
+import bcrypt from 'bcrypt';
 
 const seed = async () => {
   try {
     await db.transaction(async (tx) => {
-      console.log("Seeding started...");
+      console.log('Seeding started...');
 
       const buildUsers: UserInsert[] = await Promise.all(
         SampleUsers.map(async (u) => {
@@ -98,7 +98,7 @@ const seed = async () => {
           name: products.name,
         });
 
-      console.log("Seeding completed");
+      console.log('Seeding completed');
       console.log({
         users: createdUsers.length,
         stores: createdStores.length,
@@ -107,9 +107,9 @@ const seed = async () => {
     });
   } catch (err) {
     if (err instanceof DatabaseError) {
-      console.error("DB Error:", err.message);
+      console.error('DB Error:', err.message);
     } else {
-      console.error("Something went wrong:", err);
+      console.error('Something went wrong:', err);
     }
   }
 };

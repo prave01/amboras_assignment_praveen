@@ -1,4 +1,4 @@
-import { LoginForm } from "../molecules/login-form";
+import { LoginForm } from '../molecules/login-form';
 
 export function LoginTemplate() {
   return (
@@ -7,8 +7,12 @@ export function LoginTemplate() {
       <div className="pointer-events-none absolute -left-20 bottom-10 h-72 w-72 rounded-full border border-foreground/10" />
       <div className="pointer-events-none absolute -right-12 top-14 h-48 w-48 rounded-full border border-foreground/10" />
       <section className="panel-surface fade-up relative z-10 w-full max-w-md rounded-3xl p-7 md:p-9">
-        <p className="text-xs font-semibold tracking-[0.34em] text-muted-foreground">AMBORAS ANALYTICS</p>
-        <h1 className="mt-4 font-heading text-4xl leading-tight">Sign in to your store intelligence</h1>
+        <p className="text-xs font-semibold tracking-[0.34em] text-muted-foreground">
+          AMBORAS ANALYTICS
+        </p>
+        <h1 className="mt-4 font-heading text-4xl leading-tight">
+          Sign in to your store intelligence
+        </h1>
         <p className="mt-3 text-sm text-muted-foreground">
           Track revenue trends, product velocity, and event performance in one cockpit.
         </p>

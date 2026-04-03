@@ -1,9 +1,9 @@
-import axios from "axios";
-import { config } from "dotenv";
-import { SampleStores, SampleProducts } from "@repo/seed-data";
+import axios from 'axios';
+import { config } from 'dotenv';
+import { SampleStores, SampleProducts } from '@repo/seed-data';
 
 config({
-  path: "../../.env.local",
+  path: '../../.env.local',
 });
 
 interface Product {
@@ -30,18 +30,18 @@ interface Event {
   data: Record<string, unknown>;
 }
 
-const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:8080";
+const API_BASE_URL = process.env.API_BASE_URL ?? 'http://localhost:8080';
 
 const EVENTS_PER_SECOND = Number(process.env.EVENTS_PER_SECOND ?? 50);
 const BATCH_SIZE = Number(process.env.BATCH_SIZE ?? 20);
 const REALISTIC_MODE = process.env.REALISTIC_MODE! || false;
 
 const EVENT_TYPES = [
-  { type: "page_view", weight: 50 },
-  { type: "add_to_cart", weight: 20 },
-  { type: "remove_from_cart", weight: 10 },
-  { type: "checkout_started", weight: 12 },
-  { type: "purchase", weight: 8 },
+  { type: 'page_view', weight: 50 },
+  { type: 'add_to_cart', weight: 20 },
+  { type: 'remove_from_cart', weight: 10 },
+  { type: 'checkout_started', weight: 12 },
+  { type: 'purchase', weight: 8 },
 ];
 
 function pickEventType(): string {
@@ -51,7 +51,7 @@ function pickEventType(): string {
     rand -= e.weight;
     if (rand <= 0) return e.type;
   }
-  return "page_view";
+  return 'page_view';
 }
 
 function pick<T>(arr: T[]): T {
@@ -99,13 +99,11 @@ function buildEvent(store: Store, products: Product[]): Event {
 
   const baseData: Record<string, unknown> = {};
 
-  if (eventType === "purchase") {
+  if (eventType === 'purchase') {
     baseData.product_id = product.id;
     baseData.amount = product.price;
     baseData.currency = store.currency;
-  } else if (
-    ["add_to_cart", "remove_from_cart", "checkout_started"].includes(eventType)
-  ) {
+  } else if (['add_to_cart', 'remove_from_cart', 'checkout_started'].includes(eventType)) {
     baseData.product_id = product.id;
     baseData.currency = store.currency;
   }
@@ -126,7 +124,7 @@ async function sendBatch(events: Event[]): Promise<void> {
       `${API_BASE_URL}/api/v1/events/ingest`,
       { events },
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         timeout: 5000,
       },
     );
@@ -136,11 +134,11 @@ async function sendBatch(events: Event[]): Promise<void> {
       const responseData = err.response?.data;
       const code = err.code;
       console.error(
-        `[simulator] Batch failed: ${code ?? "unknown"}${status ? ` status=${status}` : ""}`,
+        `[simulator] Batch failed: ${code ?? 'unknown'}${status ? ` status=${status}` : ''}`,
         responseData ?? err.message,
       );
     } else {
-      console.error("[simulator] Batch failed:", err);
+      console.error('[simulator] Batch failed:', err);
     }
   }
 }
@@ -183,9 +181,7 @@ async function run() {
 
   const tick = async () => {
     // In realistic mode, scale the effective rate by time-of-day
-    const multiplier = REALISTIC_MODE
-      ? trafficMultiplier(new Date().getHours())
-      : 1.6;
+    const multiplier = REALISTIC_MODE ? trafficMultiplier(new Date().getHours()) : 1.6;
 
     if (Math.random() > multiplier) {
       return;
@@ -205,7 +201,7 @@ async function run() {
   };
 
   setInterval(() => {
-    tick().catch((err) => console.error("[simulator] Tick error:", err));
+    tick().catch((err) => console.error('[simulator] Tick error:', err));
   }, baseIntervalMs);
 
   setInterval(async () => {
@@ -219,7 +215,7 @@ async function run() {
 
 setTimeout(() => {
   run().catch((err) => {
-    console.error("[simulator] Fatal error:", err);
+    console.error('[simulator] Fatal error:', err);
     process.exit(1);
   });
 }, 5000);

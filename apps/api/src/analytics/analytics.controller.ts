@@ -11,7 +11,12 @@ import { redis } from 'src/redis/redis.client';
 import { JwtAuthGuard } from 'src/auth/passport/jwt.guard';
 import { db } from 'src/database/db';
 import { and, desc, eq, gte, lte, sum } from 'drizzle-orm';
-import { events, preAggregatedMetrics, products, topProductsCache } from 'src/database/schema';
+import {
+  events,
+  preAggregatedMetrics,
+  products,
+  topProductsCache,
+} from 'src/database/schema';
 import { ReqDto } from './dto/Req.dto';
 import { AnalyticsFiltersDto } from './dto/analytics-filters.dto';
 
@@ -24,7 +29,9 @@ export class AnalyticsController {
     const period = filters?.period ?? 'week';
 
     if (period === 'custom') {
-      const start = filters?.startDate ? new Date(filters.startDate) : new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const start = filters?.startDate
+        ? new Date(filters.startDate)
+        : new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       const end = filters?.endDate ? new Date(filters.endDate) : now;
 
       return { start, end, period };
@@ -75,7 +82,10 @@ export class AnalyticsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('top-products')
-  async getTopProducts(@Request() req: ReqDto, @Body() filters: AnalyticsFiltersDto) {
+  async getTopProducts(
+    @Request() req: ReqDto,
+    @Body() filters: AnalyticsFiltersDto,
+  ) {
     try {
       const storeId = req.user?.storeId;
 
@@ -137,32 +147,35 @@ export class AnalyticsController {
         .orderBy(desc(events.timestamp));
 
       const topProducts = Array.from(
-        liveRows.reduce(
-          (accumulator, item) => {
-            const key = item.productId ?? item.productName ?? 'unknown-product';
-            const current = accumulator.get(key) ?? {
-              productId: item.productId,
-              productName: item.productName ?? item.productId,
-              totalRevenue: 0,
-              purchaseCount: 0,
-            };
+        liveRows
+          .reduce(
+            (accumulator, item) => {
+              const key =
+                item.productId ?? item.productName ?? 'unknown-product';
+              const current = accumulator.get(key) ?? {
+                productId: item.productId,
+                productName: item.productName ?? item.productId,
+                totalRevenue: 0,
+                purchaseCount: 0,
+              };
 
-            current.totalRevenue += Number(item.amount ?? 0);
-            current.purchaseCount += 1;
-            accumulator.set(key, current);
+              current.totalRevenue += Number(item.amount ?? 0);
+              current.purchaseCount += 1;
+              accumulator.set(key, current);
 
-            return accumulator;
-          },
-          new Map<
-            string,
-            {
-              productId: string | null;
-              productName: string | null;
-              totalRevenue: number;
-              purchaseCount: number;
-            }
-          >(),
-        ).values(),
+              return accumulator;
+            },
+            new Map<
+              string,
+              {
+                productId: string | null;
+                productName: string | null;
+                totalRevenue: number;
+                purchaseCount: number;
+              }
+            >(),
+          )
+          .values(),
       )
         .sort((left, right) => right.totalRevenue - left.totalRevenue)
         .slice(0, 10)
@@ -186,7 +199,10 @@ export class AnalyticsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('recent-activity')
-  async recent_activity(@Request() req: ReqDto, @Body() filters: AnalyticsFiltersDto) {
+  async recent_activity(
+    @Request() req: ReqDto,
+    @Body() filters: AnalyticsFiltersDto,
+  ) {
     try {
       const storeId = req.user.storeId;
       const range = this.resolveRange(filters);

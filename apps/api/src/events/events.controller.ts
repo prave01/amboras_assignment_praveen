@@ -13,7 +13,7 @@ import { JwtAuthGuard } from 'src/auth/passport/jwt.guard';
 
 @Controller('events')
 export class EventsController {
-  constructor(@InjectQueue('events') private readonly eventsQueue: Queue) { }
+  constructor(@InjectQueue('events') private readonly eventsQueue: Queue) {}
 
   @Post('ingest')
   async updateEventData(@Body() ingestDto: IngestDto) {

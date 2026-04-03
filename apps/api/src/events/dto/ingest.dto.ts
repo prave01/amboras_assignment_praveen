@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsIn,
@@ -11,14 +11,14 @@ import {
   IsUUID,
   ValidateIf,
   ValidateNested,
-} from "class-validator";
+} from 'class-validator';
 
 const VALID_EVENT_TYPES = [
-  "page_view",
-  "add_to_cart",
-  "remove_from_cart",
-  "checkout_started",
-  "purchase",
+  'page_view',
+  'add_to_cart',
+  'remove_from_cart',
+  'checkout_started',
+  'purchase',
 ] as const;
 
 export class EventDataDto {

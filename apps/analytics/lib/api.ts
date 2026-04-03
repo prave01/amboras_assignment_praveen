@@ -1,22 +1,22 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080/api/v1';
 
 export class ApiError extends Error {
   status: number;
 
   constructor(message: string, status: number) {
     super(message);
-    this.name = "ApiError";
+    this.name = 'ApiError';
     this.status = status;
   }
 }
 
 export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
-    credentials: "include",
-    cache: "no-store",
+    credentials: 'include',
+    cache: 'no-store',
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...(init?.headers ?? {}),
     },
   });
@@ -27,10 +27,10 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   if (!response.ok) {
     const fallbackMessage = `Request failed with status ${response.status}`;
     const message =
-      typeof parsed === "object" &&
+      typeof parsed === 'object' &&
       parsed !== null &&
-      "message" in parsed &&
-      typeof (parsed as { message?: unknown }).message === "string"
+      'message' in parsed &&
+      typeof (parsed as { message?: unknown }).message === 'string'
         ? (parsed as { message: string }).message
         : fallbackMessage;
 
@@ -42,13 +42,13 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
 
 export async function apiGet<T>(path: string): Promise<T> {
   return apiRequest<T>(path, {
-    method: "GET",
+    method: 'GET',
   });
 }
 
 export async function apiPost<T>(path: string, body?: unknown): Promise<T> {
   return apiRequest<T>(path, {
-    method: "POST",
+    method: 'POST',
     body: body ? JSON.stringify(body) : undefined,
   });
 }

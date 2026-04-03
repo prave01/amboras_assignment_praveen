@@ -1,8 +1,8 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { eq } from "drizzle-orm";
-import { AnalyticsService } from "src/analytics/analytics.service";
-import { db } from "src/database/db";
-import { type User, users, stores } from "src/database/schema";
+import { Injectable, Logger } from '@nestjs/common';
+import { eq } from 'drizzle-orm';
+import { AnalyticsService } from 'src/analytics/analytics.service';
+import { db } from 'src/database/db';
+import { type User, users, stores } from 'src/database/schema';
 
 export type AuthUser = {
   id: string;
@@ -28,16 +28,16 @@ export class UsersService {
 
       return user
         ? {
-          id: user.id as string,
-          name: user?.name as string,
-          email: user?.email as string,
-          password: user?.password as string,
-          storeId: getStore?.id as string,
-        }
+            id: user.id as string,
+            name: user?.name as string,
+            email: user?.email as string,
+            password: user?.password as string,
+            storeId: getStore?.id as string,
+          }
         : undefined;
     } catch (err) {
       this.logger.error(`Error while finding user by email: ${email}`, err);
-      console.error("Error while finding the user:", err);
+      console.error('Error while finding the user:', err);
     }
   }
 }

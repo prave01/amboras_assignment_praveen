@@ -1,15 +1,22 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import useSWR from "swr";
-import { AlertTriangle, CircleDollarSign, MousePointerClick, ShoppingBag, TrendingUp, Activity } from "lucide-react";
-import { apiGet, apiPost } from "@/lib/api";
-import { DashboardHeader } from "@/components/atomic/organisms/dashboard-header";
-import { DashboardFilters } from "@/components/atomic/molecules/dashboard-filters";
-import { DashboardOverviewGrid } from "@/components/atomic/organisms/dashboard-overview-grid";
-import { TopProductsTable } from "@/components/atomic/organisms/top-products-table";
-import { RecentActivityFeed } from "@/components/atomic/organisms/recent-activity-feed";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
+import {
+  AlertTriangle,
+  CircleDollarSign,
+  MousePointerClick,
+  ShoppingBag,
+  TrendingUp,
+  Activity,
+} from 'lucide-react';
+import { apiGet, apiPost } from '@/lib/api';
+import { DashboardHeader } from '@/components/atomic/organisms/dashboard-header';
+import { DashboardFilters } from '@/components/atomic/molecules/dashboard-filters';
+import { DashboardOverviewGrid } from '@/components/atomic/organisms/dashboard-overview-grid';
+import { TopProductsTable } from '@/components/atomic/organisms/top-products-table';
+import { RecentActivityFeed } from '@/components/atomic/organisms/recent-activity-feed';
 import {
   buildFilterPayload,
   normalizeOverview,
@@ -20,39 +27,60 @@ import {
   type RecentEvent,
   type TimeRange,
   type TopProduct,
-} from "@/lib/analytics/dashboard";
+} from '@/lib/analytics/dashboard';
 
 const createFetchers = () => {
-  const identityFetcher = () => apiGet<{ ownerName: string; ownerEmail: string; storeName: string; storeId: string | null }>("/auth/me");
+  const identityFetcher = () =>
+    apiGet<{ ownerName: string; ownerEmail: string; storeName: string; storeId: string | null }>(
+      '/auth/me',
+    );
   const metricFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
-    apiPost<{ data: unknown }>("/analytics/overview", buildFilterPayload(period, startDate, endDate));
+    apiPost<{ data: unknown }>(
+      '/analytics/overview',
+      buildFilterPayload(period, startDate, endDate),
+    );
 
-  const topProductsFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
-    apiPost<{ data: TopProduct[] }>("/analytics/top-products", buildFilterPayload(period, startDate, endDate));
+  const topProductsFetcher = ([, period, startDate, endDate]: [
+    string,
+    TimeRange,
+    string,
+    string,
+  ]) =>
+    apiPost<{ data: TopProduct[] }>(
+      '/analytics/top-products',
+      buildFilterPayload(period, startDate, endDate),
+    );
 
   const activityFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
-    apiPost<{ data: RecentEvent[] }>("/analytics/recent-activity", buildFilterPayload(period, startDate, endDate));
+    apiPost<{ data: RecentEvent[] }>(
+      '/analytics/recent-activity',
+      buildFilterPayload(period, startDate, endDate),
+    );
 
   return { identityFetcher, metricFetcher, topProductsFetcher, activityFetcher };
 };
 
 export function DashboardTemplate() {
   const router = useRouter();
-  const [range, setRange] = useState<TimeRange>("week");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [range, setRange] = useState<TimeRange>('week');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [gainFlash, setGainFlash] = useState<Record<string, boolean>>({});
   const [timeTick, setTimeTick] = useState(Date.now());
   const previousMetricsRef = useRef<Record<string, number>>({});
 
-  const { identityFetcher, metricFetcher, topProductsFetcher, activityFetcher } = useMemo(() => createFetchers(), []);
-  const filtersKey = ["analytics-filters", range, startDate, endDate] as const;
+  const { identityFetcher, metricFetcher, topProductsFetcher, activityFetcher } = useMemo(
+    () => createFetchers(),
+    [],
+  );
+  const filtersKey = ['analytics-filters', range, startDate, endDate] as const;
 
-  const {
-    data: identityData,
-    isLoading: isIdentityLoading,
-  } = useSWR("analytics-identity", identityFetcher, { keepPreviousData: true });
+  const { data: identityData, isLoading: isIdentityLoading } = useSWR(
+    'analytics-identity',
+    identityFetcher,
+    { keepPreviousData: true },
+  );
 
   const {
     data: overviewData,
@@ -66,7 +94,7 @@ export function DashboardTemplate() {
     error: productsError,
     isLoading: isProductsLoading,
     mutate: refreshProducts,
-  } = useSWR(["analytics-top-products", ...filtersKey.slice(1)] as const, topProductsFetcher, {
+  } = useSWR(['analytics-top-products', ...filtersKey.slice(1)] as const, topProductsFetcher, {
     refreshInterval: 45000,
     keepPreviousData: true,
   });
@@ -76,7 +104,7 @@ export function DashboardTemplate() {
     error: activityError,
     isLoading: isActivityLoading,
     mutate: refreshActivity,
-  } = useSWR(["analytics-recent-activity", ...filtersKey.slice(1)] as const, activityFetcher, {
+  } = useSWR(['analytics-recent-activity', ...filtersKey.slice(1)] as const, activityFetcher, {
     refreshInterval: 10000,
     keepPreviousData: true,
   });
@@ -84,17 +112,17 @@ export function DashboardTemplate() {
   const overview = normalizeOverview(overviewData);
   const products = normalizeTopProducts(productsData);
   const activity = normalizeRecentActivity(activityData);
-  const isCustomRange = range === "custom";
-  const isLiveView = range === "today" && !startDate && !endDate;
+  const isCustomRange = range === 'custom';
+  const isLiveView = range === 'today' && !startDate && !endDate;
 
   const metricCards: DashboardMetricCard[] = useMemo(
     () => [
       {
-        key: "today-revenue",
-        title: "Total Revenue Today",
-        value: new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        key: 'today-revenue',
+        title: 'Total Revenue Today',
+        value: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }).format(toNumericValue(overview.today.totalRevenue)),
@@ -102,11 +130,11 @@ export function DashboardTemplate() {
         icon: CircleDollarSign,
       },
       {
-        key: "week-revenue",
-        title: "Total Revenue This Week",
-        value: new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        key: 'week-revenue',
+        title: 'Total Revenue This Week',
+        value: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }).format(toNumericValue(overview.week.totalRevenue)),
@@ -114,11 +142,11 @@ export function DashboardTemplate() {
         icon: TrendingUp,
       },
       {
-        key: "month-revenue",
-        title: "Total Revenue This Month",
-        value: new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        key: 'month-revenue',
+        title: 'Total Revenue This Month',
+        value: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }).format(toNumericValue(overview.month.totalRevenue)),
@@ -126,9 +154,9 @@ export function DashboardTemplate() {
         icon: CircleDollarSign,
       },
       {
-        key: "conversion-rate",
-        title: "Conversion Rate",
-        value: `${new Intl.NumberFormat("en-US", {
+        key: 'conversion-rate',
+        title: 'Conversion Rate',
+        value: `${new Intl.NumberFormat('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }).format(toNumericValue(overview.today.conversionRate))}%`,
@@ -136,16 +164,16 @@ export function DashboardTemplate() {
         icon: MousePointerClick,
       },
       {
-        key: "total-events",
-        title: "Total Events",
-        value: new Intl.NumberFormat("en-US").format(toNumericValue(overview.today.totalEvents)),
+        key: 'total-events',
+        title: 'Total Events',
+        value: new Intl.NumberFormat('en-US').format(toNumericValue(overview.today.totalEvents)),
         numericValue: toNumericValue(overview.today.totalEvents),
         icon: Activity,
       },
       {
-        key: "purchase-count",
-        title: "Purchase Count",
-        value: new Intl.NumberFormat("en-US").format(toNumericValue(overview.today.purchaseCount)),
+        key: 'purchase-count',
+        title: 'Purchase Count',
+        value: new Intl.NumberFormat('en-US').format(toNumericValue(overview.today.purchaseCount)),
         numericValue: toNumericValue(overview.today.purchaseCount),
         icon: ShoppingBag,
       },
@@ -173,7 +201,9 @@ export function DashboardTemplate() {
       }
     }
 
-    previousMetricsRef.current = Object.fromEntries(metricCards.map((card) => [card.key, card.numericValue]));
+    previousMetricsRef.current = Object.fromEntries(
+      metricCards.map((card) => [card.key, card.numericValue]),
+    );
 
     if (!shouldUpdate) {
       return;
@@ -198,8 +228,8 @@ export function DashboardTemplate() {
     setIsLoggingOut(true);
 
     try {
-      await apiPost("/auth/logout");
-      router.replace("/login");
+      await apiPost('/auth/logout');
+      router.replace('/login');
       router.refresh();
     } finally {
       setIsLoggingOut(false);
@@ -207,9 +237,9 @@ export function DashboardTemplate() {
   };
 
   const handleGoLive = () => {
-    setRange("today");
-    setStartDate("");
-    setEndDate("");
+    setRange('today');
+    setStartDate('');
+    setEndDate('');
   };
 
   const hasError = Boolean(overviewError || productsError || activityError);
@@ -237,8 +267,8 @@ export function DashboardTemplate() {
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
         onClearDates={() => {
-          setStartDate("");
-          setEndDate("");
+          setStartDate('');
+          setEndDate('');
         }}
         onGoLive={handleGoLive}
         isLiveView={isLiveView}
@@ -251,17 +281,26 @@ export function DashboardTemplate() {
             <div>
               <p className="font-medium">Some dashboard data could not be loaded</p>
               <p className="mt-1 text-destructive/80">
-                We could not fetch one or more analytics panels. Try refreshing data or check API auth cookies.
+                We could not fetch one or more analytics panels. Try refreshing data or check API
+                auth cookies.
               </p>
             </div>
           </div>
         </div>
       ) : null}
 
-      <DashboardOverviewGrid cards={metricCards} gainFlash={gainFlash} isLoading={isOverviewLoading} />
+      <DashboardOverviewGrid
+        cards={metricCards}
+        gainFlash={gainFlash}
+        isLoading={isOverviewLoading}
+      />
 
       <section className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.95fr]">
-        <TopProductsTable products={products} isLoading={isProductsLoading} hasError={Boolean(productsError)} />
+        <TopProductsTable
+          products={products}
+          isLoading={isProductsLoading}
+          hasError={Boolean(productsError)}
+        />
         <RecentActivityFeed
           events={activity}
           isLoading={isActivityLoading}

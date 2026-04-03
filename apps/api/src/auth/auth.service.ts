@@ -1,15 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { AuthUser, UsersService } from "src/users/users.service";
-import bcrypt from "bcrypt";
-import { JwtService } from "@nestjs/jwt";
-import { stores } from "src/database/schema";
+import { Injectable } from '@nestjs/common';
+import { AuthUser, UsersService } from 'src/users/users.service';
+import bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { stores } from 'src/database/schema';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userServices: UsersService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userServices.findByEmail(email);
@@ -20,7 +20,7 @@ export class AuthService {
         const { password, ...result } = user;
         return result;
       }
-      console.error("Invalid Password");
+      console.error('Invalid Password');
       return null;
     }
     return null;
@@ -34,6 +34,6 @@ export class AuthService {
       storeId: user.storeId,
     };
     const access_token = await this.jwtService.signAsync(payload);
-    return { message: "Login successful", access_token };
+    return { message: 'Login successful', access_token };
   }
 }

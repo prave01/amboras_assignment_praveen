@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from "passport-jwt";
-import { jwtConstants } from "./jwt.constants";
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { jwtConstants } from './jwt.constants';
 
-const AUTH_COOKIE_NAME = "access_token";
+const AUTH_COOKIE_NAME = 'access_token';
 
 const extractJwtFromCookie = (req: { headers?: { cookie?: string } }) => {
   const cookieHeader = req?.headers?.cookie;
@@ -12,7 +12,7 @@ const extractJwtFromCookie = (req: { headers?: { cookie?: string } }) => {
   }
 
   const cookie = cookieHeader
-    .split(";")
+    .split(';')
     .map((item) => item.trim())
     .find((item) => item.startsWith(`${AUTH_COOKIE_NAME}=`));
 

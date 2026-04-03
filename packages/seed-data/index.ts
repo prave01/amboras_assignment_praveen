@@ -1,8 +1,8 @@
-import seedData from "./seed.json";
+import seedData from './seed.json';
 
-const users = seedData["users"];
-const stores = seedData["stores"];
-const products = seedData["products"];
+const users = seedData['users'];
+const stores = seedData['stores'];
+const products = seedData['products'];
 
 type SampleUsersType = (typeof users)[0];
 type SampleStoresType = (typeof stores)[0];
