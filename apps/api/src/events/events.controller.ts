@@ -21,7 +21,8 @@ export class EventsController {
       events: ingestDto.events,
     });
 
-    console.log(`Queued job id: ${job.id}, events: ${ingestDto.events.length}`);
+    console.log(`Queued job id: ${job.id}, 
+                 events: ${ingestDto.events.length}`);
     return { queued: ingestDto.events.length, jobId: job.id };
   }
 
