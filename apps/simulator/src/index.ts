@@ -183,9 +183,10 @@ async function run() {
 
   const tick = async () => {
     // In realistic mode, scale the effective rate by time-of-day
+
     const multiplier = REALISTIC_MODE
       ? trafficMultiplier(new Date().getHours())
-      : 1.6;
+      : 1.0; // 100% traffic
 
     if (Math.random() > multiplier) {
       return;
