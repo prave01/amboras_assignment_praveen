@@ -97,7 +97,6 @@ export class AnalyticsController {
         .orderBy(desc(events.timestamp))
         .limit(10);
 
-      console.log(data);
       return {
         data,
       };
