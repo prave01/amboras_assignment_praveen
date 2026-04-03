@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
-import { Activity, AlertTriangle, CircleDollarSign, MousePointerClick, ShoppingBag, TrendingUp } from "lucide-react";
+import { Activity, AlertTriangle, ArrowUpRight, CircleDollarSign, Filter, LogOut, MousePointerClick, ShoppingBag, TrendingUp } from "lucide-react";
 import { apiPost, type ApiEnvelope } from "@/lib/api";
 import { formatCurrency, formatInteger, formatPercent, formatRelativeTime } from "@/lib/format";
 import { Button } from "@/components/ui/button";
@@ -18,6 +20,18 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+
+type TimeRange = "today" | "week" | "month" | "custom";
+
+type MetricCard = {
+  key: string;
+  title: string;
+  value: string;
+  numericValue: number;
+  icon: typeof CircleDollarSign;
+  tone: "money" | "neutral";
+};
 
 type PeriodMetrics = {
   totalRevenue: number | string;
@@ -52,9 +66,28 @@ type RecentEvent = {
   currency?: string | null;
 };
 
-const metricFetcher = () => apiPost<ApiEnvelope<unknown>>("/analytics/overview");
-const topProductsFetcher = () => apiPost<ApiEnvelope<TopProduct[]>>("/analytics/top-products");
-const activityFetcher = () => apiPost<ApiEnvelope<RecentEvent[]>>("/analytics/recent-activity");
+type AnalyticsFilterPayload = {
+  period: TimeRange;
+  startDate?: string;
+  endDate?: string;
+};
+
+function buildFilterPayload(period: TimeRange, startDate: string, endDate: string): AnalyticsFilterPayload {
+  if (period === "custom") {
+    return { period, startDate, endDate };
+  }
+
+  return { period };
+}
+
+const metricFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
+  apiPost<ApiEnvelope<unknown>>("/analytics/overview", buildFilterPayload(period, startDate, endDate));
+
+const topProductsFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
+  apiPost<ApiEnvelope<TopProduct[]>>("/analytics/top-products", buildFilterPayload(period, startDate, endDate));
+
+const activityFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
+  apiPost<ApiEnvelope<RecentEvent[]>>("/analytics/recent-activity", buildFilterPayload(period, startDate, endDate));
 
 function defaultPeriod(): PeriodMetrics {
   return {
@@ -116,6 +149,11 @@ function normalizeRecentActivity(payload: ApiEnvelope<RecentEvent[]> | undefined
   return payload.data.slice(0, 20);
 }
 
+function toNumericValue(value: number | string | null | undefined): number {
+  const parsed = Number(value ?? 0);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function eventColorClass(eventType: string): string {
   switch (eventType) {
     case "purchase":
@@ -132,32 +170,150 @@ function eventColorClass(eventType: string): string {
 }
 
 export function DashboardClient() {
+  const router = useRouter();
+  const [range, setRange] = useState<TimeRange>("week");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [gainFlash, setGainFlash] = useState<Record<string, boolean>>({});
+  const previousMetricsRef = useRef<Record<string, number>>({});
+
+  const filtersKey = ["analytics-filters", range, startDate, endDate] as const;
+
   const {
     data: overviewData,
     error: overviewError,
     isLoading: isOverviewLoading,
     mutate: refreshOverview,
-  } = useSWR("analytics-overview", metricFetcher);
+  } = useSWR(filtersKey, metricFetcher, { refreshInterval: 20000, keepPreviousData: true });
 
   const {
     data: productsData,
     error: productsError,
     isLoading: isProductsLoading,
     mutate: refreshProducts,
-  } = useSWR("analytics-top-products", topProductsFetcher);
+  } = useSWR(["analytics-top-products", ...filtersKey.slice(1)] as const, topProductsFetcher, {
+    refreshInterval: 45000,
+    keepPreviousData: true,
+  });
 
   const {
     data: activityData,
     error: activityError,
     isLoading: isActivityLoading,
     mutate: refreshActivity,
-  } = useSWR("analytics-recent-activity", activityFetcher);
+  } = useSWR(["analytics-recent-activity", ...filtersKey.slice(1)] as const, activityFetcher, {
+    refreshInterval: 10000,
+    keepPreviousData: true,
+  });
 
   const overview = normalizeOverview(overviewData);
   const products = normalizeTopProducts(productsData);
   const activity = normalizeRecentActivity(activityData);
 
+  const metricCards: MetricCard[] = useMemo(
+    () => [
+      {
+        key: "today-revenue",
+        title: "Total Revenue Today",
+        value: formatCurrency(overview.today.totalRevenue),
+        numericValue: toNumericValue(overview.today.totalRevenue),
+        icon: CircleDollarSign,
+        tone: "money",
+      },
+      {
+        key: "week-revenue",
+        title: "Total Revenue This Week",
+        value: formatCurrency(overview.week.totalRevenue),
+        numericValue: toNumericValue(overview.week.totalRevenue),
+        icon: TrendingUp,
+        tone: "money",
+      },
+      {
+        key: "month-revenue",
+        title: "Total Revenue This Month",
+        value: formatCurrency(overview.month.totalRevenue),
+        numericValue: toNumericValue(overview.month.totalRevenue),
+        icon: CircleDollarSign,
+        tone: "money",
+      },
+      {
+        key: "conversion-rate",
+        title: "Conversion Rate",
+        value: formatPercent(overview.today.conversionRate),
+        numericValue: toNumericValue(overview.today.conversionRate),
+        icon: MousePointerClick,
+        tone: "neutral",
+      },
+      {
+        key: "total-events",
+        title: "Total Events",
+        value: formatInteger(overview.today.totalEvents),
+        numericValue: toNumericValue(overview.today.totalEvents),
+        icon: Activity,
+        tone: "neutral",
+      },
+      {
+        key: "purchase-count",
+        title: "Purchase Count",
+        value: formatInteger(overview.today.purchaseCount),
+        numericValue: toNumericValue(overview.today.purchaseCount),
+        icon: ShoppingBag,
+        tone: "neutral",
+      },
+    ],
+    [overview],
+  );
+
+  useEffect(() => {
+    const nextFlash: Record<string, boolean> = {};
+    let shouldUpdate = false;
+
+    for (const card of metricCards) {
+      const previous = previousMetricsRef.current[card.key];
+      if (previous !== undefined && card.numericValue > previous) {
+        nextFlash[card.key] = true;
+        shouldUpdate = true;
+      }
+    }
+
+    previousMetricsRef.current = Object.fromEntries(
+      metricCards.map((card) => [card.key, card.numericValue]),
+    );
+
+    if (!shouldUpdate) {
+      return;
+    }
+
+    setGainFlash((current) => ({ ...current, ...nextFlash }));
+
+    const timeoutId = window.setTimeout(() => {
+      setGainFlash((current) => {
+        const cleared = { ...current };
+        for (const key of Object.keys(nextFlash)) {
+          delete cleared[key];
+        }
+        return cleared;
+      });
+    }, 1100);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [metricCards]);
+
   const hasError = Boolean(overviewError || productsError || activityError);
+  const isCustomRange = range === "custom";
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    try {
+      await apiPost("/auth/logout");
+      router.replace("/login");
+      router.refresh();
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 md:px-8 md:py-8">
@@ -171,20 +327,113 @@ export function DashboardClient() {
             <p className="mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
               Unified trendlines for revenue, funnel quality, and product momentum. Values refresh from live event ingestion.
             </p>
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              <Badge variant="outline" className="rounded-full border-primary/15 bg-primary/5 px-3 py-1 text-primary">
+                Live updates enabled
+              </Badge>
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/70 px-3 py-1">
+                <span className="size-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.15)]" />
+                Refreshing every 10-45s depending on panel
+              </span>
+            </div>
           </div>
-          <Button
-            variant="outline"
-            className="h-10 w-full rounded-xl border-primary/25 bg-white/65 transition-transform duration-150 ease-out hover:bg-white md:w-auto active:scale-[0.98]"
-            onClick={() => {
-              void refreshOverview();
-              void refreshProducts();
-              void refreshActivity();
-            }}
-          >
-            Refresh data
-          </Button>
+          <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
+            <Button
+              variant="outline"
+              className="h-10 rounded-xl border-primary/25 bg-white/65 transition-transform duration-150 ease-out hover:bg-white active:scale-[0.98]"
+              onClick={() => {
+                void refreshOverview();
+                void refreshProducts();
+                void refreshActivity();
+              }}
+            >
+              Refresh data
+            </Button>
+            <Button
+              variant="outline"
+              className="h-10 rounded-xl border-rose-200 bg-rose-50 text-rose-700 transition-transform duration-150 ease-out hover:bg-rose-100 active:scale-[0.98]"
+              onClick={() => {
+                void handleLogout();
+              }}
+              disabled={isLoggingOut}
+            >
+              <LogOut className="mr-2 size-4" />
+              {isLoggingOut ? "Signing out" : "Logout"}
+            </Button>
+          </div>
         </div>
       </header>
+
+      <section className="panel-surface mt-6 rounded-3xl px-5 py-4 md:px-6 md:py-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+              <Filter className="size-3.5" />
+              Time filters
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Filter the product ranking and activity stream by preset period or a custom date range.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {(["today", "week", "month", "custom"] as const).map((option) => (
+              <Button
+                key={option}
+                variant={range === option ? "default" : "outline"}
+                size="sm"
+                className="rounded-full px-4 capitalize transition-transform duration-150 ease-out active:scale-[0.98]"
+                onClick={() => setRange(option)}
+              >
+                {option}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {isCustomRange ? (
+          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-[1fr_1fr_auto]">
+            <div className="space-y-2">
+              <label className="text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
+                Start date
+              </label>
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(event) => setStartDate(event.target.value)}
+                className="h-11 rounded-xl bg-white/75"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
+                End date
+              </label>
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(event) => setEndDate(event.target.value)}
+                className="h-11 rounded-xl bg-white/75"
+              />
+            </div>
+            <div className="flex items-end">
+              <Button
+                variant="ghost"
+                className="h-11 rounded-xl border border-border/70 bg-white/70 px-4"
+                onClick={() => {
+                  setStartDate("");
+                  setEndDate("");
+                }}
+              >
+                Clear dates
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
+        <p className="mt-4 text-xs text-muted-foreground">
+          Filters update the table and activity feed automatically. The summary cards continue to show the aggregated store snapshot.
+        </p>
+      </section>
 
       {hasError ? (
         <Alert variant="destructive" className="mt-6 rounded-2xl">
@@ -208,60 +457,47 @@ export function DashboardClient() {
                 </CardContent>
               </Card>
             ))
-          : (
-            [
-              {
-                title: "Total Revenue Today",
-                value: formatCurrency(overview.today.totalRevenue),
-                icon: CircleDollarSign,
-              },
-              {
-                title: "Total Revenue This Week",
-                value: formatCurrency(overview.week.totalRevenue),
-                icon: TrendingUp,
-              },
-              {
-                title: "Total Revenue This Month",
-                value: formatCurrency(overview.month.totalRevenue),
-                icon: CircleDollarSign,
-              },
-              {
-                title: "Conversion Rate",
-                value: formatPercent(overview.today.conversionRate),
-                icon: MousePointerClick,
-              },
-              {
-                title: "Total Events",
-                value: formatInteger(overview.today.totalEvents),
-                icon: Activity,
-              },
-              {
-                title: "Purchase Count",
-                value: formatInteger(overview.today.purchaseCount),
-                icon: ShoppingBag,
-              },
-            ].map((card, index) => (
-              <Card
-                key={card.title}
-                className="panel-surface fade-up rounded-2xl border-white/70 bg-white/78"
-                style={{ animationDelay: `${index * 45}ms` }}
-              >
-                <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-                  <CardDescription className="max-w-[10ch] text-[0.78rem] font-medium leading-4 tracking-[-0.01em] text-slate-600">
-                    {card.title}
-                  </CardDescription>
-                  <div className="flex size-8 items-center justify-center rounded-xl border border-primary/10 bg-primary/5 text-primary/80 shadow-sm">
-                    <card.icon className="size-4" />
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1">
-                  <p className="font-sans font-semibold leading-none tracking-[-0.04em] text-slate-900 md:text-xl text-md">
-                    {card.value}
-                  </p>
-                </CardContent>
-              </Card>
-            ))
-          )}
+          : metricCards.map((card, index) => {
+              const isHot = Boolean(gainFlash[card.key]);
+              const Icon = card.icon;
+
+              return (
+                <Card
+                  key={card.key}
+                  className={[
+                    "panel-surface fade-up rounded-2xl border-white/70 bg-white/78 transition-[transform,box-shadow,border-color] duration-500 ease-out",
+                    isHot ? "border-emerald-300/80 shadow-[0_20px_45px_-28px_rgba(16,185,129,0.45)]" : "",
+                  ].join(" ")}
+                  style={{ animationDelay: `${index * 45}ms` }}
+                >
+                  <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+                    <CardDescription className="max-w-[10ch] text-[0.78rem] font-medium leading-4 tracking-[-0.01em] text-slate-600">
+                      {card.title}
+                    </CardDescription>
+                    <div
+                      className={[
+                        "flex size-8 items-center justify-center rounded-xl border shadow-sm transition-all duration-500 ease-out",
+                        isHot
+                          ? "border-emerald-300 bg-emerald-50 text-emerald-600"
+                          : "border-primary/10 bg-primary/5 text-primary/80",
+                      ].join(" ")}
+                    >
+                      {isHot ? <ArrowUpRight className="size-4 animate-[gain-arrow_1.1s_ease-out_both]" /> : <Icon className="size-4" />}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-1">
+                    <p
+                      className={[
+                        "font-sans text-[2rem] font-semibold leading-none tracking-[-0.04em] transition-all duration-500 ease-out md:text-[2.35rem]",
+                        isHot ? "text-emerald-700 drop-shadow-[0_0_10px_rgba(16,185,129,0.18)]" : "text-slate-900",
+                      ].join(" ")}
+                    >
+                      {card.value}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
       </section>
 
       <section className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.95fr]">

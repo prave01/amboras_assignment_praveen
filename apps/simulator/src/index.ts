@@ -36,7 +36,7 @@ const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:8080";
 
 const EVENTS_PER_SECOND = Number(process.env.EVENTS_PER_SECOND ?? 50);
 const BATCH_SIZE = Number(process.env.BATCH_SIZE ?? 20);
-const REALISTIC_MODE = process.env.REALISTIC_MODE === "true";
+const REALISTIC_MODE = false
 
 // ── Event type weights ────────────────────────────────────────
 // Reflects a realistic eCommerce funnel:
@@ -146,7 +146,15 @@ async function sendBatch(events: Event[]): Promise<void> {
   } catch (err) {
     // Log and continue — simulator should never crash on a failed batch
     if (axios.isAxiosError(err)) {
-      console.error(`[simulator] Batch failed: ${err.message}`);
+      const status = err.response?.status;
+      const responseData = err.response?.data;
+      const code = err.code;
+      console.error(
+        `[simulator] Batch failed: ${code ?? "unknown"}${status ? ` status=${status}` : ""}`,
+        responseData ?? err.message,
+      );
+    } else {
+      console.error("[simulator] Batch failed:", err);
     }
   }
 }
@@ -192,7 +200,7 @@ async function run() {
     // In realistic mode, scale the effective rate by time-of-day
     const multiplier = REALISTIC_MODE
       ? trafficMultiplier(new Date().getHours())
-      : 1.0;
+      : 1.6;
 
     // Skip this tick probabilistically when traffic should be low
     if (Math.random() > multiplier) {
