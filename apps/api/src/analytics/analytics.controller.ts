@@ -11,6 +11,7 @@ import { JwtAuthGuard } from 'src/auth/passport/jwt.guard';
 import { db } from 'src/database/db';
 import { and, desc, eq, sum } from 'drizzle-orm';
 import { events, preAggregatedMetrics } from 'src/database/schema';
+import { ReqDto } from './dto/Req.dto';
 
 @Controller('analytics')
 export class AnalyticsController {
@@ -51,7 +52,7 @@ export class AnalyticsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('top-products')
-  async getTopProducts(@Request() req) {
+  async getTopProducts(@Request() req: ReqDto) {
     try {
       const storeId = req.user?.storeId;
 
