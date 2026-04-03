@@ -176,7 +176,16 @@ export function DashboardClient() {
   const [endDate, setEndDate] = useState("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [gainFlash, setGainFlash] = useState<Record<string, boolean>>({});
+  const [, setRelativeTimeTick] = useState(0);
   const previousMetricsRef = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setRelativeTimeTick(Date.now());
+    }, 30000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   const filtersKey = ["analytics-filters", range, startDate, endDate] as const;
 
@@ -302,6 +311,7 @@ export function DashboardClient() {
 
   const hasError = Boolean(overviewError || productsError || activityError);
   const isCustomRange = range === "custom";
+  const isLiveView = range === "today" && !startDate && !endDate;
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -338,6 +348,18 @@ export function DashboardClient() {
             </div>
           </div>
           <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
+            <Button
+              variant={isLiveView ? "default" : "outline"}
+              className="h-10 rounded-xl border-emerald-200 bg-emerald-50 text-emerald-700 transition-transform duration-150 ease-out hover:bg-emerald-100 active:scale-[0.98]"
+              onClick={() => {
+                setRange("today");
+                setStartDate("");
+                setEndDate("");
+              }}
+            >
+              <span className="mr-2 size-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.15)]" />
+              {isLiveView ? "Live now" : "Go live"}
+            </Button>
             <Button
               variant="outline"
               className="h-10 rounded-xl border-primary/25 bg-white/65 transition-transform duration-150 ease-out hover:bg-white active:scale-[0.98]"
@@ -431,7 +453,7 @@ export function DashboardClient() {
         ) : null}
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Filters update the table and activity feed automatically. The summary cards continue to show the aggregated store snapshot.
+          Filters update the table and activity feed automatically. Relative timestamps keep ticking in the background, and Go live returns you to the latest rolling view.
         </p>
       </section>
 
