@@ -220,13 +220,13 @@ async function run() {
   }, baseIntervalMs);
 
   // Flush any remaining events every 5 seconds (handles low-traffic periods)
-  // setInterval(async () => {
-  //   if (batch.length > 0) {
-  //     const toSend = batch.splice(0, batch.length);
-  //     console.log(`[simulator] Flushing ${toSend.length} remaining events`);
-  //     await sendBatch(toSend);
-  //   }
-  // }, 5000);
+  setInterval(async () => {
+    if (batch.length > 0) {
+      const toSend = batch.splice(0, batch.length);
+      console.log(`[simulator] Flushing ${toSend.length} remaining events`);
+      await sendBatch(toSend);
+    }
+  }, 5000);
 }
 
 // setTimeout(() => {
