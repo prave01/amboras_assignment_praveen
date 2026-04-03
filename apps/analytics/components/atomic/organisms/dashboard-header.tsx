@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
-import { LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DashboardHeaderProps {
-  onRefresh: () => void
-  onLogout: () => void
-  isLoggingOut: boolean
-  storeName?: string
-  ownerName?: string
-  isIdentityLoading?: boolean
+  onRefresh: () => void;
+  onLogout: () => void;
+  isLoggingOut: boolean;
+  storeName?: string;
+  ownerName?: string;
+  isIdentityLoading?: boolean;
 }
 
 export function DashboardHeader({
@@ -23,9 +23,7 @@ export function DashboardHeader({
   isIdentityLoading,
 }: DashboardHeaderProps) {
   return (
-    <header
-      className="fade-up panel-surface rounded-3xl px-6 py-5 md:px-8 md:py-6"
-    >
+    <header className="fade-up panel-surface rounded-3xl px-6 py-5 md:px-8 md:py-6">
       <div
         className="flex flex-col gap-5 md:flex-row md:items-end
           md:justify-between"
@@ -53,14 +51,14 @@ export function DashboardHeader({
                   className="rounded-full border-primary/15 bg-primary/5 px-3
                     py-1 text-primary"
                 >
-                  Store: {storeName ?? 'Unknown store'}
+                  Store: {storeName ?? "Unknown store"}
                 </Badge>
                 <Badge
                   variant="outline"
                   className="rounded-full border-slate-200 bg-slate-50 px-3 py-1
                     text-slate-700"
                 >
-                  Owner: {ownerName ?? 'Unknown owner'}
+                  Owner: {ownerName ?? "Unknown owner"}
                 </Badge>
               </>
             )}
@@ -120,10 +118,10 @@ export function DashboardHeader({
             disabled={isLoggingOut}
           >
             <LogOut className="mr-2 size-4" />
-            {isLoggingOut ? 'Signing out' : 'Logout'}
+            {isLoggingOut ? "Signing out" : "Logout"}
           </Button>
         </div>
       </div>
     </header>
-  )
+  );
 }
