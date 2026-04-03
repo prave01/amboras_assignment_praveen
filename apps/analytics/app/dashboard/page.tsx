@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { DashboardClient } from "./dashboard-client";
+import { DashboardTemplate } from "@/components/atomic/templates/dashboard-template";
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
@@ -10,5 +10,5 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  return <DashboardClient />;
+  return <DashboardTemplate />;
 }
