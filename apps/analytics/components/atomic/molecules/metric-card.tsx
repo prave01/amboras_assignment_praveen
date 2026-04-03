@@ -39,11 +39,11 @@ export function MetricCard({ title, value, icon: Icon, isHot = false, delayMs = 
       <CardContent className="pt-1">
         <p
           className={[
-            "font-sans text-[2rem] font-semibold leading-none tracking-[-0.04em] transition-all duration-500 ease-out md:text-[2.35rem]",
+            "font-sans font-semibold leading-none tracking-[-0.04em] transition-all duration-500 ease-out md:text-2xl",
             isHot ? "text-emerald-700 drop-shadow-[0_0_10px_rgba(16,185,129,0.18)]" : "text-slate-900",
           ].join(" ")}
         >
-          {value}
+          {value} 
         </p>
       </CardContent>
     </Card>

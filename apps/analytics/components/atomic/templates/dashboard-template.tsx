@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { AlertTriangle, CircleDollarSign, MousePointerClick, ShoppingBag, TrendingUp, Activity } from "lucide-react";
-import { apiPost } from "@/lib/api";
+import { apiGet, apiPost } from "@/lib/api";
 import { DashboardHeader } from "@/components/atomic/organisms/dashboard-header";
 import { DashboardFilters } from "@/components/atomic/molecules/dashboard-filters";
 import { DashboardOverviewGrid } from "@/components/atomic/organisms/dashboard-overview-grid";
@@ -23,6 +23,7 @@ import {
 } from "@/lib/analytics/dashboard";
 
 const createFetchers = () => {
+  const identityFetcher = () => apiGet<{ ownerName: string; ownerEmail: string; storeName: string; storeId: string | null }>("/auth/me");
   const metricFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
     apiPost<{ data: unknown }>("/analytics/overview", buildFilterPayload(period, startDate, endDate));
 
@@ -32,7 +33,7 @@ const createFetchers = () => {
   const activityFetcher = ([, period, startDate, endDate]: [string, TimeRange, string, string]) =>
     apiPost<{ data: RecentEvent[] }>("/analytics/recent-activity", buildFilterPayload(period, startDate, endDate));
 
-  return { metricFetcher, topProductsFetcher, activityFetcher };
+  return { identityFetcher, metricFetcher, topProductsFetcher, activityFetcher };
 };
 
 export function DashboardTemplate() {
@@ -45,8 +46,13 @@ export function DashboardTemplate() {
   const [timeTick, setTimeTick] = useState(Date.now());
   const previousMetricsRef = useRef<Record<string, number>>({});
 
-  const { metricFetcher, topProductsFetcher, activityFetcher } = useMemo(() => createFetchers(), []);
+  const { identityFetcher, metricFetcher, topProductsFetcher, activityFetcher } = useMemo(() => createFetchers(), []);
   const filtersKey = ["analytics-filters", range, startDate, endDate] as const;
+
+  const {
+    data: identityData,
+    isLoading: isIdentityLoading,
+  } = useSWR("analytics-identity", identityFetcher, { keepPreviousData: true });
 
   const {
     data: overviewData,
@@ -218,6 +224,9 @@ export function DashboardTemplate() {
         }}
         onLogout={handleLogout}
         isLoggingOut={isLoggingOut}
+        storeName={identityData?.storeName}
+        ownerName={identityData?.ownerName}
+        isIdentityLoading={isIdentityLoading}
       />
 
       <DashboardFilters

@@ -40,6 +40,12 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   return parsed as T;
 }
 
+export async function apiGet<T>(path: string): Promise<T> {
+  return apiRequest<T>(path, {
+    method: "GET",
+  });
+}
+
 export async function apiPost<T>(path: string, body?: unknown): Promise<T> {
   return apiRequest<T>(path, {
     method: "POST",
