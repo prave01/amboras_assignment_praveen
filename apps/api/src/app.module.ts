@@ -5,10 +5,12 @@ import { AuthModule } from "./auth/auth.module";
 import { EventsModule } from "./events/events.module";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { BullModule } from "@nestjs/bullmq";
-import { UsersModule } from './users/users.module';
+import { UsersModule } from "./users/users.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     AuthModule,
     EventsModule,
     AnalyticsModule,
