@@ -84,4 +84,26 @@ export class AnalyticsController {
       throw new InternalServerErrorException('Failed to fetch top products');
     }
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('recent-activity')
+  async recent_activity(@Request() req: ReqDto) {
+    try {
+      const storeId = req.user.storeId;
+      const data = await db
+        .select()
+        .from(events)
+        .where(eq(events.storeId, storeId as string))
+        .orderBy(desc(events.timestamp))
+        .limit(10);
+
+      console.log(data);
+      return {
+        data,
+      };
+    } catch (err) {
+      this.logger.error('Recent Activity API failed', err);
+      throw new InternalServerErrorException('Failed to get recent activity');
+    }
+  }
 }
