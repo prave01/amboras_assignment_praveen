@@ -25,7 +25,7 @@ pnpm install
 
 Create a `.env` file inside `apps/api/`:
 ```bash
-cp apps/api/.env.example apps/api/.env
+cp .env.example .env
 ```
 ```env
 NODE_ENV=development
