@@ -6,7 +6,12 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "check-types": "turbo run check-types",
+    "seed": "pnpm --filter @repo/api exec pnpm run seed",
+    "db:migrate": "pnpm --filter @repo/api exec pnpm run db:migrate",
+    "db:generate": "pnpm --filter @repo/api exec pnpm run db:generate",
+    "db:push": "pnpm --filter @repo/api exec pnpm run db:push",
+    "db:studio": "pnpm --filter @repo/api exec pnpm run db:studio"
   },
   "devDependencies": {
     "prettier": "^3.7.4",
