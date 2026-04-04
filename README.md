@@ -55,25 +55,26 @@ REALISTIC_MODE=false // set it true for 24hr real traffic scenario
 docker compose up -d
 ```
 
-
-
-### 5. Run database migrations
+### 5. Run the Drizzle Studio Local
 ```bash
-cd apps/api
-pnpm drizzle-kit push
-cd ../..
-```
-
-### 6. Seed the database
-```bash
-cd apps/api
-pnpm run seed
-pnpm run drizzle-studio
+pnpm run db:studio
 ```
 
 
 
-### 7. Start all apps
+### 6. Run database migrations
+```bash
+pnpm run db:push
+```
+
+### 7. Seed the database
+```bash
+pnpm run db:seed
+```
+
+
+
+### 8. Start all apps
 ```bash
 cd ../..
 turbo dev // at root
