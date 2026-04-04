@@ -103,7 +103,7 @@ export function DashboardTemplate() {
     isLoading: isOverviewLoading,
     mutate: refreshOverview,
   } = useSWR(filtersKey, metricFetcher, {
-    refreshInterval: 20000,
+    refreshInterval: 1000,
     keepPreviousData: true,
   })
 
@@ -116,7 +116,7 @@ export function DashboardTemplate() {
     ['analytics-top-products', ...filtersKey.slice(1)] as const,
     topProductsFetcher,
     {
-      refreshInterval: 45000,
+      refreshInterval: 1000,
       keepPreviousData: true,
     }
   )
@@ -130,7 +130,7 @@ export function DashboardTemplate() {
     ['analytics-recent-activity', ...filtersKey.slice(1)] as const,
     activityFetcher,
     {
-      refreshInterval: 10000,
+      refreshInterval: 1000,
       keepPreviousData: true,
     }
   )
