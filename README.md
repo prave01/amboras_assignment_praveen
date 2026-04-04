@@ -23,9 +23,9 @@ pnpm install
 
 ### 3. Set up environment variables
 
-Create a `.env` file inside `apps/api/`:
+Create a `.env.local` file at root
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 ```env
 NODE_ENV=development
