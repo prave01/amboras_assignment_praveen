@@ -76,7 +76,7 @@ pnpm run drizzle-studio
 ### 7. Start all apps
 ```bash
 cd ../..
-pnpm dev
+turbo dev // at root
 ```
 
 This starts all three apps together via Turborepo:
