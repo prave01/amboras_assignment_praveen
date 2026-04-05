@@ -7,16 +7,16 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common'
-import { redis } from 'src/redis/redis.client'
-import { JwtAuthGuard } from 'src/auth/passport/jwt.guard'
-import { db } from 'src/database/db'
+import { redis } from '../../src/redis/redis.client'
+import { JwtAuthGuard } from '../../src/auth/passport/jwt.guard'
+import { db } from '../../src/database/db'
 import { and, count, desc, eq, gte, lte, sum } from 'drizzle-orm'
 import {
   events,
   preAggregatedMetrics,
   products,
   topProductsCache,
-} from 'src/database/schema'
+} from '../../src/database/schema'
 import { ReqDto } from './dto/Req.dto'
 import { AnalyticsFiltersDto } from './dto/analytics-filters.dto'
 
@@ -245,7 +245,12 @@ export class AnalyticsController {
         )
         .orderBy(desc(events.timestamp))
 
-      const topProducts = Array.from(
+      const topProducts = Array.from<{
+        productId: string | null
+        productName: string | null
+        totalRevenue: number
+        purchaseCount: number
+      }>(
         liveRows
           .reduce(
             (accumulator, item) => {

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
 import { IngestDto } from './dto/ingest.dto'
 import { Queue } from 'bullmq'
 import { InjectQueue } from '@nestjs/bullmq'
-import { JwtAuthGuard } from 'src/auth/passport/jwt.guard'
+import { JwtAuthGuard } from '../../src/auth/passport/jwt.guard'
 
 @Controller('events')
 export class EventsController {

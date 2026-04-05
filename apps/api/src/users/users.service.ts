@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { eq } from 'drizzle-orm'
-import { AnalyticsService } from 'src/analytics/analytics.service'
-import { db } from 'src/database/db'
-import { type User, users, stores } from 'src/database/schema'
+import { AnalyticsService } from '../../src/analytics/analytics.service'
+import { db } from '../../src/database/db'
+import { type User, users, stores } from '../../src/database/schema'
 
 export type AuthUser = {
   id: string

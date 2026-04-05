@@ -3,9 +3,9 @@ import { AuthService } from './auth.service'
 import { LocalAuthGuard } from './passport/local-auth.guard'
 import type { Response } from 'express'
 import { JwtAuthGuard } from './passport/jwt.guard'
-import { db } from 'src/database/db'
+import { db } from '../../src/database/db'
 import { eq } from 'drizzle-orm'
-import { stores } from 'src/database/schema'
+import { stores } from '../../src/database/schema'
 
 const AUTH_COOKIE_NAME = 'access_token'
 

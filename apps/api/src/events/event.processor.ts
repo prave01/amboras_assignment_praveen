@@ -1,8 +1,8 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq'
 import { EventDto } from './dto/ingest.dto'
 import { type Job } from 'bullmq'
-import { events, type EventInsert } from 'src/database/schema'
-import { db } from 'src/database/db'
+import { events, type EventInsert } from '../../src/database/schema'
+import { db } from '../../src/database/db'
 
 @Processor('events')
 export class EventsProcessor extends WorkerHost {

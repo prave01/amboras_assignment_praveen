@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { count, eq, gte, sql, sum } from 'drizzle-orm'
-import { db } from 'src/database/db'
-import { events, preAggregatedMetrics, stores } from 'src/database/schema'
-import { redis } from 'src/redis/redis.client'
+import { db } from '../../src/database/db'
+import { events, preAggregatedMetrics, stores } from '../../src/database/schema'
+import { redis } from '../../src/redis/redis.client'
 
 @Injectable()
 export class AnalyticsService {
