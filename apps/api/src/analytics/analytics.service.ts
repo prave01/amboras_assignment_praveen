@@ -9,7 +9,7 @@ import { redis } from '../../src/redis/redis.client'
 export class AnalyticsService {
   private readonly logger = new Logger(AnalyticsService.name)
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_MINUTE)
   async handlePreaggregationJob() {
     this.logger.debug('Running pre-aggregation job...')
 
