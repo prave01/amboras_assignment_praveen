@@ -15,6 +15,12 @@ export type OverviewResponse = {
   today: PeriodMetrics
   week: PeriodMetrics
   month: PeriodMetrics
+  selectedPeriod: PeriodMetrics
+  selectedWindow: {
+    period: TimeRange
+    start: string
+    end: string
+  }
 }
 
 export type TopProduct = {
@@ -121,13 +127,43 @@ export function normalizeOverview(
     'week' in raw &&
     'month' in raw
   ) {
-    return raw as OverviewResponse
+    const overview = raw as {
+      today: PeriodMetrics
+      week: PeriodMetrics
+      month: PeriodMetrics
+      selectedPeriod?: PeriodMetrics
+      selectedWindow?: {
+        period?: TimeRange
+        start?: string
+        end?: string
+      }
+    }
+
+    const nowIso = new Date().toISOString()
+
+    return {
+      today: overview.today,
+      week: overview.week,
+      month: overview.month,
+      selectedPeriod: overview.selectedPeriod ?? overview.week,
+      selectedWindow: {
+        period: overview.selectedWindow?.period ?? 'week',
+        start: overview.selectedWindow?.start ?? nowIso,
+        end: overview.selectedWindow?.end ?? nowIso,
+      },
+    }
   }
 
   const base = {
     today: defaultPeriod(),
     week: defaultPeriod(),
     month: defaultPeriod(),
+    selectedPeriod: defaultPeriod(),
+    selectedWindow: {
+      period: 'week' as TimeRange,
+      start: new Date().toISOString(),
+      end: new Date().toISOString(),
+    },
   }
 
   if (typeof raw === 'object' && raw !== null && 'period' in raw) {
@@ -137,6 +173,8 @@ export function normalizeOverview(
         ...defaultPeriod(),
         ...(raw as Partial<PeriodMetrics>),
       }
+      base.selectedPeriod = base[period]
+      base.selectedWindow.period = period
     }
   }
 

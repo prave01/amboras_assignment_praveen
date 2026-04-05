@@ -28,6 +28,7 @@ import {
   type TimeRange,
   type TopProduct,
 } from '@/lib/analytics/dashboard'
+import { formatCurrency, formatInteger, formatPercent } from '@/lib/format'
 
 const createFetchers = () => {
   const identityFetcher = () =>
@@ -138,8 +139,44 @@ export function DashboardTemplate() {
   const overview = normalizeOverview(overviewData)
   const products = normalizeTopProducts(productsData)
   const activity = normalizeRecentActivity(activityData)
-  const isCustomRange = range === 'custom'
   const isLiveView = range === 'today' && !startDate && !endDate
+  const selectedMetrics = overview.selectedPeriod
+
+  const filterWindowLabel = useMemo(() => {
+    const start = new Date(overview.selectedWindow.start)
+    const end = new Date(overview.selectedWindow.end)
+
+    const dateFormatter = new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    })
+
+    const safeStart = Number.isNaN(start.getTime())
+      ? 'selected start'
+      : dateFormatter.format(start)
+    const safeEnd = Number.isNaN(end.getTime())
+      ? 'selected end'
+      : dateFormatter.format(end)
+
+    return `Showing data from ${safeStart} to ${safeEnd}`
+  }, [overview.selectedWindow.end, overview.selectedWindow.start])
+
+  const filterWindowTitle = useMemo(() => {
+    if (range === 'custom') {
+      return 'Metrics For Custom Range'
+    }
+
+    if (range === 'today') {
+      return 'Metrics For Today'
+    }
+
+    if (range === 'month') {
+      return 'Metrics For This Month'
+    }
+
+    return 'Metrics For This Week'
+  }, [range])
 
   const metricCards: DashboardMetricCard[] = useMemo(
     () => [
@@ -209,6 +246,63 @@ export function DashboardTemplate() {
       },
     ],
     [overview]
+  )
+
+  const filteredMetricCards: DashboardMetricCard[] = useMemo(
+    () => [
+      {
+        key: 'selected-revenue',
+        title: 'Total Revenue',
+        value: formatCurrency(selectedMetrics.totalRevenue),
+        numericValue: toNumericValue(selectedMetrics.totalRevenue),
+        icon: CircleDollarSign,
+      },
+      {
+        key: 'selected-conversion-rate',
+        title: 'Conversion Rate',
+        value: formatPercent(selectedMetrics.conversionRate),
+        numericValue: toNumericValue(selectedMetrics.conversionRate),
+        icon: MousePointerClick,
+      },
+      {
+        key: 'selected-total-events',
+        title: 'Total Events',
+        value: formatInteger(selectedMetrics.totalEvents),
+        numericValue: toNumericValue(selectedMetrics.totalEvents),
+        icon: Activity,
+      },
+      {
+        key: 'selected-purchase-count',
+        title: 'Purchase Count',
+        value: formatInteger(selectedMetrics.purchaseCount),
+        numericValue: toNumericValue(selectedMetrics.purchaseCount),
+        icon: ShoppingBag,
+      },
+      {
+        key: 'selected-page-view-count',
+        title: 'Page Views',
+        value: formatInteger(selectedMetrics.pageViewCount),
+        numericValue: toNumericValue(selectedMetrics.pageViewCount),
+        icon: TrendingUp,
+      },
+      {
+        key: 'selected-aov',
+        title: 'Avg Revenue / Purchase',
+        value: formatCurrency(
+          toNumericValue(selectedMetrics.purchaseCount) > 0
+            ? toNumericValue(selectedMetrics.totalRevenue) /
+                toNumericValue(selectedMetrics.purchaseCount)
+            : 0
+        ),
+        numericValue:
+          toNumericValue(selectedMetrics.purchaseCount) > 0
+            ? toNumericValue(selectedMetrics.totalRevenue) /
+              toNumericValue(selectedMetrics.purchaseCount)
+            : 0,
+        icon: CircleDollarSign,
+      },
+    ],
+    [selectedMetrics]
   )
 
   useEffect(() => {
@@ -329,6 +423,27 @@ export function DashboardTemplate() {
         gainFlash={gainFlash}
         isLoading={isOverviewLoading}
       />
+
+      <section className="mt-6">
+        <div
+          className="flex flex-col gap-2 rounded-2xl border border-border/70
+            bg-white/70 px-4 py-3 md:flex-row md:items-center
+            md:justify-between"
+        >
+          <p className="text-sm font-semibold tracking-[-0.01em] text-slate-900">
+            {filterWindowTitle}
+          </p>
+          <p className="text-xs text-muted-foreground md:text-sm">
+            {filterWindowLabel}
+          </p>
+        </div>
+
+        <DashboardOverviewGrid
+          cards={filteredMetricCards}
+          gainFlash={{}}
+          isLoading={isOverviewLoading}
+        />
+      </section>
 
       <section className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.95fr]">
         <TopProductsTable

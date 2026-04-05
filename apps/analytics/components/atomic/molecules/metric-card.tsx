@@ -45,19 +45,18 @@ export function MetricCard({
         </CardDescription>
         <div
           className={[
-            'flex size-8 items-center justify-center rounded-xl border shadow-sm transition-all duration-500 ease-out',
+            'relative flex size-8 items-center justify-center rounded-xl border shadow-sm transition-all duration-500 ease-out',
             isHot
               ? 'border-emerald-300 bg-emerald-50 text-emerald-600'
               : 'border-primary/10 bg-primary/5 text-primary/80',
           ].join(' ')}
         >
+          <Icon className="size-4" />
           {isHot ? (
             <ArrowUpRight
-              className="size-4 animate-[gain-arrow_1.1s_ease-out_both]"
+              className="pointer-events-none absolute size-4 animate-[gain-arrow_1.1s_ease-out_both]"
             />
-          ) : (
-            <Icon className="size-4" />
-          )}
+          ) : null}
         </div>
       </CardHeader>
       <CardContent className="pt-1">

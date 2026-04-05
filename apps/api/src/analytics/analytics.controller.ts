@@ -10,7 +10,7 @@ import {
 import { redis } from 'src/redis/redis.client'
 import { JwtAuthGuard } from 'src/auth/passport/jwt.guard'
 import { db } from 'src/database/db'
-import { and, desc, eq, gte, lte, sum } from 'drizzle-orm'
+import { and, count, desc, eq, gte, lte, sum } from 'drizzle-orm'
 import {
   events,
   preAggregatedMetrics,
@@ -23,6 +23,53 @@ import { AnalyticsFiltersDto } from './dto/analytics-filters.dto'
 @Controller('analytics')
 export class AnalyticsController {
   private readonly logger = new Logger(AnalyticsController.name)
+
+  private toPeriodMetrics(
+    row:
+      | {
+          totalRevenue: string | null
+          purchaseCount: number
+          pageViewCount: number
+          totalEvents: number
+        }
+      | undefined
+  ) {
+    const purchaseCount = row?.purchaseCount ?? 0
+    const pageViewCount = row?.pageViewCount ?? 0
+    const conversionRate = pageViewCount > 0 ? purchaseCount / pageViewCount : 0
+
+    return {
+      totalRevenue: Number(row?.totalRevenue ?? 0),
+      purchaseCount,
+      pageViewCount,
+      totalEvents: row?.totalEvents ?? 0,
+      conversionRate,
+    }
+  }
+
+  private async computeLiveOverview(
+    storeId: string,
+    start: Date,
+    end: Date
+  ) {
+    const rows = await db
+      .select({
+        totalRevenue: sum(events.amount),
+        purchaseCount: count(eq(events.eventType, 'purchase')),
+        pageViewCount: count(eq(events.eventType, 'page_view')),
+        totalEvents: count(),
+      })
+      .from(events)
+      .where(
+        and(
+          eq(events.storeId, storeId),
+          gte(events.timestamp, start),
+          lte(events.timestamp, end)
+        )
+      )
+
+    return this.toPeriodMetrics(rows[0])
+  }
 
   private resolveRange(filters?: AnalyticsFiltersDto) {
     const now = new Date()
@@ -49,7 +96,10 @@ export class AnalyticsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('overview')
-  async getOveriew(@Request() req: ReqDto) {
+  async getOveriew(
+    @Request() req: ReqDto,
+    @Body() filters: AnalyticsFiltersDto
+  ) {
     try {
       const storeId = req.user?.storeId
 
@@ -57,22 +107,71 @@ export class AnalyticsController {
         throw new InternalServerErrorException('StoreId missing from JWT')
       }
 
+      const range = this.resolveRange(filters)
       const cached = await redis.get(`analytics:${storeId}:overview`)
 
+      const selectedMetrics = await this.computeLiveOverview(
+        storeId,
+        range.start,
+        range.end
+      )
+
       if (cached) {
+        const parsed = JSON.parse(cached) as {
+          today?: unknown
+          week?: unknown
+          month?: unknown
+        }
+
         return {
           message: 'cache-hit',
-          data: JSON.parse(cached),
+          data: {
+            ...parsed,
+            selectedPeriod: selectedMetrics,
+            selectedWindow: {
+              period: range.period,
+              start: range.start.toISOString(),
+              end: range.end.toISOString(),
+            },
+          },
         }
       }
 
-      const overview = await db.query.preAggregatedMetrics.findFirst({
-        where: eq(preAggregatedMetrics.storeId, storeId),
-      })
+      const preAggregatedRows = await db
+        .select({
+          period: preAggregatedMetrics.period,
+          totalRevenue: preAggregatedMetrics.totalRevenue,
+          purchaseCount: preAggregatedMetrics.purchaseCount,
+          pageViewCount: preAggregatedMetrics.pageViewCount,
+          totalEvents: preAggregatedMetrics.totalEvents,
+          conversionRate: preAggregatedMetrics.conversionRate,
+        })
+        .from(preAggregatedMetrics)
+        .where(eq(preAggregatedMetrics.storeId, storeId))
+
+      const periodOverview = {
+        today: this.toPeriodMetrics(
+          preAggregatedRows.find((row) => row.period === 'today')
+        ),
+        week: this.toPeriodMetrics(
+          preAggregatedRows.find((row) => row.period === 'week')
+        ),
+        month: this.toPeriodMetrics(
+          preAggregatedRows.find((row) => row.period === 'month')
+        ),
+      }
 
       return {
         message: 'cache-miss',
-        data: overview ?? {},
+        data: {
+          ...periodOverview,
+          selectedPeriod: selectedMetrics,
+          selectedWindow: {
+            period: range.period,
+            start: range.start.toISOString(),
+            end: range.end.toISOString(),
+          },
+        },
       }
     } catch (error) {
       this.logger.error('Overview API failed', error)
