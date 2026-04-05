@@ -7,7 +7,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "seed": "pnpm --filter @repo/api exec pnpm run seed",
+    "db:seed": "pnpm --filter @repo/api exec pnpm run db:seed",
     "db:migrate": "pnpm --filter @repo/api exec pnpm run db:migrate",
     "db:generate": "pnpm --filter @repo/api exec pnpm run db:generate",
     "db:push": "pnpm --filter @repo/api exec pnpm run db:push",
